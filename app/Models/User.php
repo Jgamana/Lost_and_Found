@@ -50,6 +50,8 @@ class User extends Authenticatable
         ];
     }
 
+    
+
     public function lostItems()
     {
         return $this->hasMany(LostItem::class);
@@ -93,5 +95,10 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+
+    public function emailVerification()
+    {
+        return $this->hasOne(EmailVerification::class);
     }
 }

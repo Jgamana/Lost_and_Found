@@ -226,7 +226,7 @@
 
 .faculty-services-grid {
     display: grid;
-    grid-template-columns: repeat(6,minmax(0,1fr));
+    grid-template-columns: repeat(4,minmax(0,1fr));
     gap: 12px;
 }
 
@@ -395,7 +395,7 @@
 @media (max-width: 1400px) {
 
     .faculty-services-grid {
-        grid-template-columns: repeat(3,minmax(0,1fr));
+        grid-template-columns: repeat(2,minmax(0,1fr));
     }
 
 }
@@ -519,30 +519,6 @@
 
 
             <div class="faculty-hero-actions">
-
-                <a
-                    href="{{ route('faculty.report-lost') }}"
-                    class="faculty-hero-button faculty-hero-button-primary"
-                >
-
-                    <i class="bi bi-search"></i>
-
-                    Report Lost Item
-
-                </a>
-
-
-                <a
-                    href="{{ route('faculty.report-found') }}"
-                    class="faculty-hero-button faculty-hero-button-light"
-                >
-
-                    <i class="bi bi-box-seam"></i>
-
-                    Report Found Item
-
-                </a>
-
 
                 <a
                     href="{{ route('faculty.browse-found-items') }}"
@@ -739,50 +715,6 @@
 
 
             <a
-                href="{{ route('faculty.report-lost') }}"
-                class="faculty-service-item"
-            >
-
-                <div class="faculty-service-icon">
-                    <i class="bi bi-plus-circle"></i>
-                </div>
-
-                <div class="faculty-service-title">
-                    Report Lost Item
-                </div>
-
-                <div class="faculty-service-description">
-                    Report an item you lost.
-                </div>
-
-                <i class="bi bi-arrow-up-right faculty-service-arrow"></i>
-
-            </a>
-
-
-            <a
-                href="{{ route('faculty.report-found') }}"
-                class="faculty-service-item"
-            >
-
-                <div class="faculty-service-icon">
-                    <i class="bi bi-plus-circle"></i>
-                </div>
-
-                <div class="faculty-service-title">
-                    Report Found Item
-                </div>
-
-                <div class="faculty-service-description">
-                    Report an item you found.
-                </div>
-
-                <i class="bi bi-arrow-up-right faculty-service-arrow"></i>
-
-            </a>
-
-
-            <a
                 href="{{ route('faculty.found-items') }}"
                 class="faculty-service-item"
             >
@@ -937,9 +869,11 @@
 
 
                                     <td>
+
                                         {{ \Carbon\Carbon::parse(
                                             $report['date']
                                         )->format('M d, Y') }}
+
                                     </td>
 
 

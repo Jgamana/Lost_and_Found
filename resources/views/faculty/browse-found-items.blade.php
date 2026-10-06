@@ -1,707 +1,705 @@
 @extends('layouts.app')
 
 @section('title', 'Found Items')
+@section('page-title', 'Found Items')
 
 @section('content')
 
-<div class="page-heading mb-4">
-
-    <div class="page-label">
-        Lost & Found
-    </div>
-
-    <h1>
-        Found Items
-    </h1>
-
-    <p>
-        Browse items that have been reported as found.
-    </p>
-
-</div>
-
-
-<div class="modern-card search-card mb-4">
-
-    <div class="search-wrapper">
-
-        <i class="bi bi-search"></i>
-
-        <input
-            type="text"
-            id="foundItemSearch"
-            class="search-input"
-            placeholder="Search found items..."
-            autocomplete="off"
-        >
-
-    </div>
-
-</div>
-
-
-<div
-    class="row g-4"
-    id="foundItemsContainer"
->
-
-    @forelse($foundItems as $item)
-
-        <div
-            class="col-12 col-md-6 col-xl-4 found-item-card"
-            data-search="
-                {{ strtolower(
-                    $item->item_name . ' ' .
-                    ($item->description ?? '') . ' ' .
-                    ($item->category->name ?? '') . ' ' .
-                    ($item->location->name ?? '') . ' ' .
-                    ($item->user->name ?? '')
-                ) }}
-            "
-        >
-
-            <div class="found-item-card-inner">
-
-                <div class="found-item-image">
-
-                    @if($item->image)
-
-                        <img
-                            src="{{ asset('storage/' . $item->image) }}"
-                            alt="{{ $item->item_name }}"
-                        >
-
-                    @else
-
-                        <div class="no-image">
-
-                            <i class="bi bi-image"></i>
-
-                        </div>
-
-                    @endif
-
-                </div>
-
-
-                <div class="found-item-content">
-
-                    <div class="found-item-title">
-
-                        <h5>
-                            {{ $item->item_name }}
-                        </h5>
-
-                        @if($item->status === 'awaiting_surrender')
-
-                            <span class="found-badge warning">
-                                Awaiting Surrender
-                            </span>
-
-                        @elseif($item->status === 'received')
-
-                            <span class="found-badge info">
-                                Received
-                            </span>
-
-                        @elseif($item->status === 'approved')
-
-                            <span class="found-badge success">
-                                Approved
-                            </span>
-
-                        @elseif($item->status === 'claimed')
-
-                            <span class="found-badge primary">
-                                Claimed
-                            </span>
-
-                        @elseif($item->status === 'rejected')
-
-                            <span class="found-badge danger">
-                                Rejected
-                            </span>
-
-                        @else
-
-                            <span class="found-badge">
-                                {{ ucfirst($item->status) }}
-                            </span>
-
-                        @endif
-
-                    </div>
-
-
-                    <div class="found-item-details">
-
-                        <div class="detail-item">
-
-                            <div class="detail-icon">
-                                <i class="bi bi-person"></i>
-                            </div>
-
-                            <div>
-
-                                <small>
-                                    Reported By
-                                </small>
-
-                                <p>
-                                    {{ $item->user->name ?? 'Unknown' }}
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="detail-item">
-
-                            <div class="detail-icon">
-                                <i class="bi bi-grid"></i>
-                            </div>
-
-                            <div>
-
-                                <small>
-                                    Category
-                                </small>
-
-                                <p>
-                                    {{ $item->category->name ?? 'N/A' }}
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="detail-item">
-
-                            <div class="detail-icon">
-                                <i class="bi bi-geo-alt"></i>
-                            </div>
-
-                            <div>
-
-                                <small>
-                                    Location
-                                </small>
-
-                                <p>
-                                    {{ $item->location->name ?? 'N/A' }}
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="detail-item">
-
-                            <div class="detail-icon">
-                                <i class="bi bi-calendar3"></i>
-                            </div>
-
-                            <div>
-
-                                <small>
-                                    Date Found
-                                </small>
-
-                                <p>
-                                    {{ \Carbon\Carbon::parse(
-                                        $item->found_date
-                                    )->format('M d, Y') }}
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="claim-button-wrapper">
-
-                        @if(
-                            $item->status === 'approved' &&
-                            $item->user_id != auth()->id()
-                        )
-
-                            <a
-                                href="{{ route(
-                                    'faculty.claim-create',
-                                    $item->id
-                                ) }}"
-                                class="claim-button"
-                            >
-
-                                <span>
-                                    <i class="bi bi-hand-index-thumb"></i>
-                                    Claim This Item
-                                </span>
-
-                                <i class="bi bi-arrow-right"></i>
-
-                            </a>
-
-                        @elseif($item->user_id == auth()->id())
-
-                            <div class="item-message">
-
-                                <i class="bi bi-person-check"></i>
-
-                                <span>
-                                    You reported this item.
-                                </span>
-
-                            </div>
-
-                        @elseif($item->status === 'claimed')
-
-                            <div class="item-message">
-
-                                <i class="bi bi-check-circle"></i>
-
-                                <span>
-                                    This item has already been claimed.
-                                </span>
-
-                            </div>
-
-                        @else
-
-                            <div class="item-message">
-
-                                <i class="bi bi-hourglass-split"></i>
-
-                                <span>
-                                    This item is not available for claiming yet.
-                                </span>
-
-                            </div>
-
-                        @endif
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    @empty
-
-        <div class="col-12">
-
-            <div class="empty-state">
-
-                <div class="empty-icon">
-                    <i class="bi bi-box-seam"></i>
-                </div>
-
-                <h5>
-                    No Found Items Available
-                </h5>
-
-                <p>
-                    There are currently no found items available for claiming.
-                </p>
-
-            </div>
-
-        </div>
-
-    @endforelse
-
-
-    <div
-        id="noSearchResults"
-        class="col-12"
-        style="display: none;"
-    >
-
-        <div class="empty-state">
-
-            <div class="empty-icon">
-                <i class="bi bi-search"></i>
-            </div>
-
-            <h5>
-                No Matching Items
-            </h5>
-
-            <p>
-                No found items match your search.
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-
 <style>
 
-.search-card {
-    padding: 16px 20px;
-    border: 1px solid #edf0f2;
-    background: #ffffff;
+.faculty-found-page {
+    --teal: #365c5a;
+    --teal-dark: #294947;
+    --gold: #d6a51d;
+    --border: #e4eceb;
+    --text: #263b3a;
+    --muted: #7b8d8b;
 }
 
-.search-wrapper {
-    position: relative;
+.faculty-page-header {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 24px;
 }
 
-.search-wrapper i {
+.faculty-page-label {
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+}
+
+.faculty-page-title {
+    color: var(--text);
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0 0 6px;
+}
+
+.faculty-page-description {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0;
+}
+
+.faculty-search-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 15px;
+    margin-bottom: 22px;
+    box-shadow: 0 5px 18px rgba(41, 73, 71, 0.035);
+}
+
+.faculty-search-wrapper {
+    position: relative;
+}
+
+.faculty-search-icon {
     position: absolute;
-    left: 16px;
-    color: #8a949e;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
     font-size: 15px;
     z-index: 2;
 }
 
-.search-input {
+.faculty-search-input {
     width: 100%;
     height: 46px;
-    border: 1px solid #e4e8eb;
-    border-radius: 12px;
-    padding: 0 16px 0 43px;
-    font-size: 12px;
-    color: #303943;
-    background: #fafbfc;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 0 14px 0 40px;
+    background: #fafcfc;
+    color: var(--text);
+    font-size: 13px;
     outline: none;
     transition: 0.2s ease;
 }
 
-.search-input::placeholder {
-    color: #9aa3ad;
+.faculty-search-input::placeholder {
+    color: #9aa9a7;
 }
 
-.search-input:focus {
-    border-color: #365c5a;
+.faculty-search-input:focus {
     background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(54, 92, 90, 0.08);
+    border-color: #b8d0cc;
+    box-shadow: 0 0 0 3px rgba(54, 92, 90, 0.07);
 }
 
-
-.found-item-card {
-    display: flex;
-}
-
-
-.found-item-card-inner {
-    width: 100%;
+.faculty-found-card {
     height: 100%;
-    min-height: 525px;
     background: #ffffff;
-    border: 1px solid #edf0f2;
-    border-radius: 18px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
     padding: 14px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 5px 18px rgba(31, 41, 55, 0.05);
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    box-shadow: 0 5px 18px rgba(41, 73, 71, 0.035);
+    transition: 0.2s ease;
 }
 
-.found-item-card-inner:hover {
+.faculty-found-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(31, 41, 55, 0.10);
+    box-shadow: 0 12px 28px rgba(41, 73, 71, 0.09);
 }
 
-
-.found-item-image {
+.faculty-found-image {
     width: 100%;
-    height: 205px;
-    flex-shrink: 0;
-    background: #f6f8f9;
-    border-radius: 14px;
+    height: 210px;
+    background: #f5f8f7;
+    border-radius: 15px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.found-item-image img {
+.faculty-found-image img {
     width: 100%;
     height: 100%;
     object-fit: contain;
     display: block;
 }
 
-.no-image {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #aab2ba;
+.faculty-no-image {
+    color: #a9b7b5;
     font-size: 48px;
 }
 
-
-.found-item-content {
+.faculty-found-content {
     display: flex;
     flex-direction: column;
-    flex: 1;
-    padding: 17px 4px 3px;
+    min-height: 300px;
+    padding: 18px 4px 3px;
 }
 
-
-.found-item-title {
+.faculty-found-title {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 10px;
-    margin-bottom: 17px;
+    margin-bottom: 18px;
 }
 
-
-.found-item-title h5 {
-    margin: 0;
-    color: #26313a;
-    font-size: 16px;
+.faculty-found-title h5 {
+    color: var(--text);
+    font-size: 17px;
     font-weight: 700;
     line-height: 1.35;
+    margin: 0;
     word-break: break-word;
 }
 
-
-.found-badge {
+.faculty-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
     max-width: 125px;
-    text-align: center;
-    background: #f0f2f4;
-    color: #66717c;
+    padding: 6px 9px;
     border-radius: 20px;
-    padding: 5px 9px;
-    font-size: 8px;
+    font-size: 9px;
     font-weight: 700;
     line-height: 1.2;
+    text-align: center;
 }
 
-
-.found-badge.warning {
-    background: #fff3cd;
-    color: #856404;
+.faculty-status-warning {
+    background: #fbf2d7;
+    color: #967414;
 }
 
-
-.found-badge.info {
-    background: #dff3f8;
-    color: #267080;
+.faculty-status-info {
+    background: #e4f2f3;
+    color: #39777b;
 }
 
-
-.found-badge.success {
-    background: #e8f3ef;
-    color: #397566;
+.faculty-status-success {
+    background: #e5f3ea;
+    color: #43835a;
 }
 
-
-.found-badge.primary {
-    background: #e8eef8;
+.faculty-status-primary {
+    background: #e7eef8;
     color: #42628f;
 }
 
-
-.found-badge.danger {
-    background: #fde8e8;
-    color: #a94442;
+.faculty-status-danger {
+    background: #fff0f0;
+    color: #bd5555;
 }
 
+.faculty-status-default {
+    background: #eef2f1;
+    color: #64716f;
+}
 
-.found-item-details {
+.faculty-details {
     display: flex;
     flex-direction: column;
     gap: 11px;
 }
 
-
-.detail-item {
+.faculty-detail {
     display: flex;
     align-items: center;
     gap: 11px;
 }
 
-
-.detail-icon {
-    width: 32px;
-    height: 32px;
+.faculty-detail-icon {
+    width: 34px;
+    height: 34px;
     flex-shrink: 0;
-    border-radius: 9px;
-    background: #f1f6f5;
-    color: #365c5a;
+    border-radius: 10px;
+    background: #eef5f3;
+    color: var(--teal);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 14px;
 }
 
-
-.detail-item small {
+.faculty-detail-label {
     display: block;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 600;
     margin-bottom: 2px;
-    color: #9aa3ad;
-    font-size: 9px;
-    font-weight: 500;
 }
 
-
-.detail-item p {
-    margin: 0;
-    color: #46515b;
-    font-size: 11px;
+.faculty-detail-value {
+    color: var(--text);
+    font-size: 12px;
     font-weight: 600;
     line-height: 1.3;
 }
 
-
-.claim-button-wrapper {
+.faculty-claim-wrapper {
     margin-top: auto;
-    padding-top: 18px;
+    padding-top: 20px;
 }
 
-
-.claim-button {
+.faculty-claim-button {
     width: 100%;
-    min-height: 42px;
+    min-height: 44px;
     padding: 0 14px;
     border-radius: 11px;
-    background: #365c5a;
+    background: var(--teal);
     color: #ffffff;
     text-decoration: none;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     transition: 0.2s ease;
 }
 
-
-.claim-button span {
+.faculty-claim-button span {
     display: flex;
     align-items: center;
     gap: 7px;
 }
 
-
-.claim-button > i {
-    font-size: 13px;
+.faculty-claim-button > i {
     transition: transform 0.2s ease;
 }
 
-
-.claim-button:hover {
-    background: #2d4e4c;
+.faculty-claim-button:hover {
+    background: var(--teal-dark);
     color: #ffffff;
 }
 
-
-.claim-button:hover > i {
+.faculty-claim-button:hover > i {
     transform: translateX(3px);
 }
 
-
-.item-message {
+.faculty-item-message {
     width: 100%;
-    min-height: 42px;
-    padding: 8px 12px;
+    min-height: 44px;
+    padding: 9px 12px;
     border-radius: 11px;
-    background: #f7f8f9;
-    border: 1px solid #edf0f2;
-    color: #8a949e;
+    background: #f7f9f8;
+    border: 1px solid #edf2f1;
+    color: var(--muted);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 7px;
     text-align: center;
-    font-size: 10px;
-    font-weight: 500;
-    line-height: 1.3;
+    font-size: 11px;
+    line-height: 1.35;
 }
 
-
-.item-message i {
-    font-size: 13px;
+.faculty-item-message i {
+    color: var(--teal);
+    font-size: 14px;
     flex-shrink: 0;
 }
 
-
-.empty-state {
+.faculty-empty-state {
     background: #ffffff;
-    border: 1px solid #edf0f2;
-    border-radius: 18px;
-    padding: 55px 25px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 60px 25px;
     text-align: center;
-    box-shadow: 0 5px 18px rgba(31, 41, 55, 0.04);
+    box-shadow: 0 5px 18px rgba(41, 73, 71, 0.035);
 }
 
-
-.empty-icon {
-    width: 62px;
-    height: 62px;
+.faculty-empty-icon {
+    width: 64px;
+    height: 64px;
     margin: 0 auto 17px;
     border-radius: 18px;
-    background: #f1f6f5;
-    color: #365c5a;
+    background: #eef5f3;
+    color: var(--teal);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 27px;
+    font-size: 28px;
 }
 
-
-.empty-state h5 {
-    color: #303943;
-    font-size: 15px;
+.faculty-empty-title {
+    color: var(--text);
+    font-size: 16px;
     font-weight: 700;
     margin-bottom: 7px;
 }
 
-
-.empty-state p {
-    color: #9099a3;
-    font-size: 11px;
+.faculty-empty-text {
+    color: var(--muted);
+    font-size: 12px;
     margin: 0;
 }
 
+@media (max-width: 768px) {
 
-@media (max-width: 767px) {
-
-    .found-item-card-inner {
-        min-height: auto;
+    .faculty-page-header {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
-    .found-item-image {
+    .faculty-page-title {
+        font-size: 26px;
+    }
+
+    .faculty-found-image {
         height: 220px;
     }
 
-    .found-item-title h5 {
-        font-size: 15px;
-    }
-
-}
-
-
-@media (min-width: 1200px) {
-
-    .found-item-image {
-        height: 205px;
+    .faculty-found-content {
+        min-height: auto;
     }
 
 }
 
 </style>
+
+
+<div class="faculty-found-page">
+
+    <div class="faculty-page-header">
+
+        <div>
+
+            <div class="faculty-page-label">
+                <i class="bi bi-box-seam me-1"></i>
+                Lost & Found
+            </div>
+
+            <h1 class="faculty-page-title">
+                Found Items
+            </h1>
+
+            <p class="faculty-page-description">
+                Browse items that have been reported as found.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="faculty-search-card">
+
+        <div class="faculty-search-wrapper">
+
+            <i class="bi bi-search faculty-search-icon"></i>
+
+            <input
+                type="text"
+                id="foundItemSearch"
+                class="faculty-search-input"
+                placeholder="Search found items..."
+                autocomplete="off"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="row g-4"
+        id="foundItemsContainer"
+    >
+
+        @forelse($foundItems as $item)
+
+            <div
+                class="col-12 col-md-6 col-xl-4 found-item-card"
+                data-search="{{ strtolower(
+                    $item->item_name . ' ' .
+                    ($item->description ?? '') . ' ' .
+                    ($item->category->name ?? '') . ' ' .
+                    ($item->location->name ?? '') . ' ' .
+                    ($item->user->name ?? '')
+                ) }}"
+            >
+
+                <div class="faculty-found-card">
+
+                    <div class="faculty-found-image">
+
+                        @if($item->image)
+
+                            <img
+                                src="{{ asset('storage/' . $item->image) }}"
+                                alt="{{ $item->item_name }}"
+                            >
+
+                        @else
+
+                            <div class="faculty-no-image">
+                                <i class="bi bi-image"></i>
+                            </div>
+
+                        @endif
+
+                    </div>
+
+
+                    <div class="faculty-found-content">
+
+                        <div class="faculty-found-title">
+
+                            <h5>
+                                {{ $item->item_name }}
+                            </h5>
+
+
+                            @if($item->status === 'awaiting_surrender')
+
+                                <span class="faculty-status faculty-status-warning">
+                                    Awaiting Surrender
+                                </span>
+
+                            @elseif($item->status === 'received')
+
+                                <span class="faculty-status faculty-status-info">
+                                    Received
+                                </span>
+
+                            @elseif($item->status === 'approved')
+
+                                <span class="faculty-status faculty-status-success">
+                                    Approved
+                                </span>
+
+                            @elseif($item->status === 'claimed')
+
+                                <span class="faculty-status faculty-status-primary">
+                                    Claimed
+                                </span>
+
+                            @elseif($item->status === 'rejected')
+
+                                <span class="faculty-status faculty-status-danger">
+                                    Rejected
+                                </span>
+
+                            @else
+
+                                <span class="faculty-status faculty-status-default">
+                                    {{ ucfirst($item->status) }}
+                                </span>
+
+                            @endif
+
+                        </div>
+
+
+                        <div class="faculty-details">
+
+                            <div class="faculty-detail">
+
+                                <div class="faculty-detail-icon">
+                                    <i class="bi bi-person"></i>
+                                </div>
+
+                                <div>
+
+                                    <span class="faculty-detail-label">
+                                        Reported By
+                                    </span>
+
+                                    <div class="faculty-detail-value">
+                                        {{ $item->user->name ?? 'Unknown' }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="faculty-detail">
+
+                                <div class="faculty-detail-icon">
+                                    <i class="bi bi-grid"></i>
+                                </div>
+
+                                <div>
+
+                                    <span class="faculty-detail-label">
+                                        Category
+                                    </span>
+
+                                    <div class="faculty-detail-value">
+                                        {{ $item->category->name ?? 'N/A' }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="faculty-detail">
+
+                                <div class="faculty-detail-icon">
+                                    <i class="bi bi-geo-alt"></i>
+                                </div>
+
+                                <div>
+
+                                    <span class="faculty-detail-label">
+                                        Location
+                                    </span>
+
+                                    <div class="faculty-detail-value">
+                                        {{ $item->location->name ?? 'N/A' }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="faculty-detail">
+
+                                <div class="faculty-detail-icon">
+                                    <i class="bi bi-calendar3"></i>
+                                </div>
+
+                                <div>
+
+                                    <span class="faculty-detail-label">
+                                        Date Found
+                                    </span>
+
+                                    <div class="faculty-detail-value">
+                                        {{ \Carbon\Carbon::parse($item->found_date)->format('M d, Y') }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="faculty-claim-wrapper">
+
+                            @if(
+                                $item->status === 'approved' &&
+                                $item->user_id != auth()->id()
+                            )
+
+                                <a
+                                    href="{{ route('faculty.claim-create', $item->id) }}"
+                                    class="faculty-claim-button"
+                                >
+
+                                    <span>
+                                        <i class="bi bi-hand-index-thumb"></i>
+                                        Claim This Item
+                                    </span>
+
+                                    <i class="bi bi-arrow-right"></i>
+
+                                </a>
+
+                            @elseif($item->user_id == auth()->id())
+
+                                <div class="faculty-item-message">
+
+                                    <i class="bi bi-person-check"></i>
+
+                                    <span>
+                                        You reported this item.
+                                    </span>
+
+                                </div>
+
+                            @elseif($item->status === 'claimed')
+
+                                <div class="faculty-item-message">
+
+                                    <i class="bi bi-check-circle"></i>
+
+                                    <span>
+                                        This item has already been claimed.
+                                    </span>
+
+                                </div>
+
+                            @else
+
+                                <div class="faculty-item-message">
+
+                                    <i class="bi bi-hourglass-split"></i>
+
+                                    <span>
+                                        This item is not available for claiming yet.
+                                    </span>
+
+                                </div>
+
+                            @endif
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        @empty
+
+            <div class="col-12">
+
+                <div class="faculty-empty-state">
+
+                    <div class="faculty-empty-icon">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+
+                    <h5 class="faculty-empty-title">
+                        No Found Items Available
+                    </h5>
+
+                    <p class="faculty-empty-text">
+                        There are currently no found items available for claiming.
+                    </p>
+
+                </div>
+
+            </div>
+
+        @endforelse
+
+
+        <div
+            id="noSearchResults"
+            class="col-12"
+            style="display: none;"
+        >
+
+            <div class="faculty-empty-state">
+
+                <div class="faculty-empty-icon">
+                    <i class="bi bi-search"></i>
+                </div>
+
+                <h5 class="faculty-empty-title">
+                    No Matching Items
+                </h5>
+
+                <p class="faculty-empty-text">
+                    No found items match your search.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 
 <script>

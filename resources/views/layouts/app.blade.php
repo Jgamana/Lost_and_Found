@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,7 +58,6 @@
         a {
             text-decoration: none;
         }
-
 
         /* SIDEBAR */
 
@@ -229,14 +229,12 @@
             line-height: 1.6;
         }
 
-
         /* MAIN */
 
         .main {
             margin-left: var(--sidebar-width);
             min-height: 100vh;
         }
-
 
         /* TOPBAR */
 
@@ -291,7 +289,6 @@
             gap: 10px;
         }
 
-
         /* NOTIFICATION BUTTON */
 
         .notification-wrapper {
@@ -330,7 +327,6 @@
             top: 5px;
             right: 5px;
         }
-
 
         /* FLOATING NOTIFICATION PANEL */
 
@@ -566,110 +562,109 @@
 
         /* FLOATING LOGOUT CONFIRMATION */
 
-.logout-confirmation {
-    position: fixed;
-    inset: 0;
-    background: rgba(32, 40, 51, 0.18);
-    backdrop-filter: blur(3px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 3000;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.2s ease;
-}
+        .logout-confirmation {
+            position: fixed;
+            inset: 0;
+            background: rgba(32, 40, 51, 0.18);
+            backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+        }
 
-.logout-confirmation.show {
-    opacity: 1;
-    visibility: visible;
-}
+        .logout-confirmation.show {
+            opacity: 1;
+            visibility: visible;
+        }
 
-.logout-confirmation-card {
-    width: 340px;
-    max-width: calc(100vw - 30px);
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 28px 25px;
-    text-align: center;
-    box-shadow: 0 20px 50px rgba(31, 41, 55, 0.18);
-    transform: translateY(8px) scale(0.97);
-    transition: all 0.2s ease;
-}
+        .logout-confirmation-card {
+            width: 340px;
+            max-width: calc(100vw - 30px);
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px 25px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(31, 41, 55, 0.18);
+            transform: translateY(8px) scale(0.97);
+            transition: all 0.2s ease;
+        }
 
-.logout-confirmation.show .logout-confirmation-card {
-    transform: translateY(0) scale(1);
-}
+        .logout-confirmation.show .logout-confirmation-card {
+            transform: translateY(0) scale(1);
+        }
 
-.logout-confirmation-icon {
-    width: 54px;
-    height: 54px;
-    margin: 0 auto 15px;
-    border-radius: 16px;
-    background: #fff0ec;
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 23px;
-}
+        .logout-confirmation-icon {
+            width: 54px;
+            height: 54px;
+            margin: 0 auto 15px;
+            border-radius: 16px;
+            background: #fff0ec;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+        }
 
-.logout-confirmation-card h5 {
-    color: var(--text);
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 7px;
-}
+        .logout-confirmation-card h5 {
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
 
-.logout-confirmation-card p {
-    color: var(--muted);
-    font-size: 10px;
-    line-height: 1.5;
-    margin-bottom: 22px;
-}
+        .logout-confirmation-card p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.5;
+            margin-bottom: 22px;
+        }
 
-.logout-confirmation-actions {
-    display: flex;
-    gap: 9px;
-}
+        .logout-confirmation-actions {
+            display: flex;
+            gap: 9px;
+        }
 
-.logout-cancel-button,
-.logout-confirm-button {
-    flex: 1;
-    border: none;
-    border-radius: 11px;
-    padding: 10px 14px;
-    font-size: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s ease;
-}
+        .logout-cancel-button,
+        .logout-confirm-button {
+            flex: 1;
+            border: none;
+            border-radius: 11px;
+            padding: 10px 14px;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
 
-.logout-cancel-button {
-    background: #f5f7fa;
-    color: #667180;
-    border: 1px solid var(--border);
-}
+        .logout-cancel-button {
+            background: #f5f7fa;
+            color: #667180;
+            border: 1px solid var(--border);
+        }
 
-.logout-cancel-button:hover {
-    background: #eef1f4;
-    color: var(--text);
-}
+        .logout-cancel-button:hover {
+            background: #eef1f4;
+            color: var(--text);
+        }
 
-.logout-confirm-button {
-    background: var(--primary);
-    color: #ffffff;
-}
+        .logout-confirm-button {
+            background: var(--primary);
+            color: #ffffff;
+        }
 
-.logout-confirm-button:hover {
-    background: var(--primary-dark);
-}
+        .logout-confirm-button:hover {
+            background: var(--primary-dark);
+        }
 
-.logout-confirm-button i {
-    margin-right: 5px;
-}
-
+        .logout-confirm-button i {
+            margin-right: 5px;
+        }
 
         /* PROFILE */
 
@@ -709,7 +704,6 @@
             margin-top: 2px;
         }
 
-
         /* CONTENT */
 
         .content {
@@ -741,7 +735,6 @@
             margin: 0;
         }
 
-
         /* MODERN CARD */
 
         .modern-card {
@@ -756,7 +749,6 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 28px rgba(31, 41, 55, 0.07);
         }
-
 
         /* STAT CARD */
 
@@ -821,7 +813,6 @@
             color: var(--success);
         }
 
-
         /* SECTION */
 
         .section-header {
@@ -849,7 +840,6 @@
             font-weight: 600;
             text-decoration: none;
         }
-
 
         /* ACTION CARDS */
 
@@ -929,7 +919,6 @@
             color: white;
         }
 
-
         /* TABLE */
 
         .table-card {
@@ -972,7 +961,6 @@
             margin-top: 2px;
         }
 
-
         /* STATUS */
 
         .status {
@@ -1007,7 +995,6 @@
             background: #e8f6f0;
             color: #4da483;
         }
-
 
         /* MATCH CARDS */
 
@@ -1100,7 +1087,6 @@
             color: #6085d3;
         }
 
-
         /* DASHBOARD NOTIFICATION CARDS */
 
         .notification-card {
@@ -1161,7 +1147,6 @@
             color: #a0a8b3;
         }
 
-
         /* WELCOME */
 
         .welcome-banner {
@@ -1219,11 +1204,9 @@
             color: white;
         }
 
-
         /* RESPONSIVE */
 
         @media (max-width: 991px) {
-
             .sidebar {
                 transform: translateX(-100%);
                 transition: transform 0.25s ease;
@@ -1245,12 +1228,9 @@
             .topbar {
                 padding: 0 20px;
             }
-
         }
 
-
         @media (max-width: 767px) {
-
             .content {
                 padding: 22px 16px;
             }
@@ -1287,12 +1267,9 @@
                 max-width: none;
                 transform-origin: top right;
             }
-
         }
 
-
         @media (max-width: 575px) {
-
             .content {
                 padding: 18px 12px;
             }
@@ -1330,7 +1307,6 @@
                 padding: 5px 7px;
                 font-size: 8px;
             }
-
         }
     </style>
 
@@ -1344,16 +1320,13 @@
         <div class="brand">
 
             <div class="logo-container">
-
                 <img
                     src="{{ asset('images/logo/download (15).jpeg') }}"
                     alt="Lost and Found Logo"
                 >
-
             </div>
 
             <div>
-
                 <div class="brand-title">
                     Lost & Found
                 </div>
@@ -1361,11 +1334,9 @@
                 <div class="brand-subtitle">
                     MLG College of Learning, Inc.
                 </div>
-
             </div>
 
         </div>
-
 
         <nav class="nav-menu">
 
@@ -1379,7 +1350,6 @@
                     Dashboard
                 </a>
 
-
                 <a
                     href="{{ route('student.my-reports') }}"
                     class="nav-link {{ request()->is('student/my-reports*') ? 'active' : '' }}"
@@ -1387,7 +1357,6 @@
                     <i class="bi bi-file-earmark-text"></i>
                     My Reports
                 </a>
-
 
                 <a
                     href="{{ route('student.my-claims') }}"
@@ -1397,14 +1366,11 @@
                     My Claims
                 </a>
 
-
                 <a
                     href="{{ route('notifications') }}"
                     class="nav-link {{ request()->is('notifications*') ? 'active' : '' }}"
                 >
-
                     <i class="bi bi-bell"></i>
-
                     Notifications
 
                     @php
@@ -1417,15 +1383,11 @@
                     @endphp
 
                     @if($unreadNotifications > 0)
-
                         <span class="notification-badge">
                             {{ $unreadNotifications }}
                         </span>
-
                     @endif
-
                 </a>
-
 
                 <a
                     href="{{ route('profile') }}"
@@ -1434,7 +1396,6 @@
                     <i class="bi bi-person"></i>
                     Profile
                 </a>
-
 
             @elseif(auth()->user()->role === 'faculty')
 
@@ -1446,15 +1407,13 @@
                     Dashboard
                 </a>
 
-
                 <a
                     href="{{ route('faculty.browse-found-items') }}"
-                    class="nav-link {{ request()->is('faculty/browse-found-items*') ? 'active' : '' }}"
+                    class="nav-link {{ request()->is('faculty/found-items/browse*') ? 'active' : '' }}"
                 >
                     <i class="bi bi-box-seam"></i>
                     Browse Found Items
                 </a>
-
 
                 <a
                     href="{{ route('faculty.report-lost') }}"
@@ -1464,7 +1423,6 @@
                     Report Lost Item
                 </a>
 
-
                 <a
                     href="{{ route('faculty.report-found') }}"
                     class="nav-link {{ request()->is('faculty/report-found') ? 'active' : '' }}"
@@ -1472,7 +1430,6 @@
                     <i class="bi bi-box-seam"></i>
                     Report Found Item
                 </a>
-
 
                 <a
                     href="{{ route('faculty.my-reports') }}"
@@ -1482,14 +1439,11 @@
                     My Reports
                 </a>
 
-
                 <a
                     href="{{ route('notifications') }}"
                     class="nav-link {{ request()->is('notifications*') ? 'active' : '' }}"
                 >
-
                     <i class="bi bi-bell"></i>
-
                     Notifications
 
                     @php
@@ -1502,15 +1456,11 @@
                     @endphp
 
                     @if($unreadNotifications > 0)
-
                         <span class="notification-badge">
                             {{ $unreadNotifications }}
                         </span>
-
                     @endif
-
                 </a>
-
 
                 <a
                     href="{{ route('profile') }}"
@@ -1519,7 +1469,6 @@
                     <i class="bi bi-person"></i>
                     Profile
                 </a>
-
 
             @elseif(auth()->user()->role === 'admin')
 
@@ -1531,7 +1480,6 @@
                     Dashboard
                 </a>
 
-
                 <a
                     href="{{ route('admin.report-found') }}"
                     class="nav-link {{ request()->is('admin/report-found') ? 'active' : '' }}"
@@ -1539,7 +1487,6 @@
                     <i class="bi bi-box-seam"></i>
                     Report Found Item
                 </a>
-
 
                 <a
                     href="{{ route('admin.report-lost') }}"
@@ -1549,7 +1496,6 @@
                     Report Lost Item
                 </a>
 
-
                 <a
                     href="{{ route('admin.my-reports') }}"
                     class="nav-link {{ request()->is('admin/my-reports*') ? 'active' : '' }}"
@@ -1558,14 +1504,11 @@
                     My Reports
                 </a>
 
-
                 <a
                     href="{{ route('notifications') }}"
                     class="nav-link {{ request()->is('notifications*') ? 'active' : '' }}"
                 >
-
                     <i class="bi bi-bell"></i>
-
                     Notifications
 
                     @php
@@ -1578,15 +1521,11 @@
                     @endphp
 
                     @if($unreadNotifications > 0)
-
                         <span class="notification-badge">
                             {{ $unreadNotifications }}
                         </span>
-
                     @endif
-
                 </a>
-
 
                 <a
                     href="{{ route('profile') }}"
@@ -1600,17 +1539,18 @@
 
         </nav>
 
-<div class="logout-form">
-    <button
-        type="button"
-        class="nav-link logout-button"
-        id="logoutButton"
-    >
-        <i class="bi bi-box-arrow-right"></i>
-        Logout
-    </button>
-</div>
+        <div class="logout-form">
 
+            <button
+                type="button"
+                class="nav-link logout-button"
+                id="logoutButton"
+            >
+                <i class="bi bi-box-arrow-right"></i>
+                Logout
+            </button>
+
+        </div>
 
         <div class="sidebar-bottom">
 
@@ -1623,7 +1563,6 @@
 
     </aside>
 
-
     <main class="main">
 
         <header class="topbar">
@@ -1635,11 +1574,8 @@
                     id="menuButton"
                     type="button"
                 >
-
                     <i class="bi bi-list"></i>
-
                 </button>
-
 
                 <div>
 
@@ -1655,11 +1591,7 @@
 
             </div>
 
-
             <div class="topbar-right">
-
-
-                {{-- FLOATING NOTIFICATION --}}
 
                 <div class="notification-wrapper">
 
@@ -1671,7 +1603,6 @@
                     >
 
                         <i class="bi bi-bell"></i>
-
 
                         @php
                             $unreadNotifications = \App\Models\Notification::where(
@@ -1690,15 +1621,11 @@
                             ->get();
                         @endphp
 
-
                         @if($unreadNotifications > 0)
-
                             <span class="notification-dot"></span>
-
                         @endif
 
                     </button>
-
 
                     <div
                         class="notification-dropdown"
@@ -1710,9 +1637,7 @@
                             <div class="notification-dropdown-title">
 
                                 <div class="notification-dropdown-title-icon">
-
                                     <i class="bi bi-bell"></i>
-
                                 </div>
 
                                 <div>
@@ -1729,19 +1654,15 @@
 
                             </div>
 
-
                             @if($unreadNotifications > 0)
 
                                 <div class="notification-unread-count">
-
                                     {{ $unreadNotifications }}
-
                                 </div>
 
                             @endif
 
                         </div>
-
 
                         <div class="notification-list">
 
@@ -1789,34 +1710,24 @@
 
                                     </div>
 
-
                                     <div class="floating-notification-content">
 
                                         <div class="floating-notification-title">
-
                                             {{ $notification->title }}
-
                                         </div>
 
-
                                         <div class="floating-notification-message">
-
                                             {{ \Illuminate\Support\Str::limit(
                                                 $notification->message,
                                                 90
                                             ) }}
-
                                         </div>
 
-
                                         <div class="floating-notification-time">
-
                                             {{ $notification->created_at->diffForHumans() }}
-
                                         </div>
 
                                     </div>
-
 
                                     @if(!$notification->is_read)
 
@@ -1831,9 +1742,7 @@
                                 <div class="notification-empty">
 
                                     <div class="notification-empty-icon">
-
                                         <i class="bi bi-bell-slash"></i>
-
                                     </div>
 
                                     <h6>
@@ -1850,18 +1759,14 @@
 
                         </div>
 
-
                         <div class="notification-dropdown-footer">
 
                             <a
                                 href="{{ route('notifications') }}"
                                 class="notification-view-all"
                             >
-
                                 View All Notifications
-
                                 <i class="bi bi-arrow-right"></i>
-
                             </a>
 
                         </div>
@@ -1870,7 +1775,6 @@
 
                 </div>
 
-
                 @if(auth()->user()->role === 'admin')
 
                     <a
@@ -1878,22 +1782,16 @@
                         class="notification-btn"
                         title="Activity Logs"
                     >
-
                         <i class="bi bi-clock-history"></i>
-
                     </a>
 
                 @endif
 
-
                 <div class="profile">
 
                     <div class="profile-avatar">
-
                         {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
-
                     </div>
-
 
                     <div class="profile-info">
 
@@ -1912,7 +1810,6 @@
             </div>
 
         </header>
-
 
         <section class="content">
 
@@ -1937,243 +1834,223 @@
 
             @endif
 
-
             @yield('content')
 
         </section>
 
     </main>
+
     <div
-    class="logout-confirmation"
-    id="logoutConfirmation"
->
-    <div class="logout-confirmation-card">
+        class="logout-confirmation"
+        id="logoutConfirmation"
+    >
 
-        <div class="logout-confirmation-icon">
-            <i class="bi bi-box-arrow-right"></i>
-        </div>
+        <div class="logout-confirmation-card">
 
-        <h5>
-            Are you sure you want to logout?
-        </h5>
+            <div class="logout-confirmation-icon">
+                <i class="bi bi-box-arrow-right"></i>
+            </div>
 
-        <p>
-            You will need to log in again to access your account.
-        </p>
+            <h5>
+                Are you sure you want to logout?
+            </h5>
 
-        <div class="logout-confirmation-actions">
+            <p>
+                You will need to log in again to access your account.
+            </p>
 
-            <button
-                type="button"
-                class="logout-cancel-button"
-                id="logoutCancel"
-            >
-                Cancel
-            </button>
-
-            <form
-                action="{{ route('logout') }}"
-                method="POST"
-                style="flex: 1;"
-            >
-                @csrf
+            <div class="logout-confirmation-actions">
 
                 <button
-                    type="submit"
-                    class="logout-confirm-button w-100"
+                    type="button"
+                    class="logout-cancel-button"
+                    id="logoutCancel"
                 >
-                    <i class="bi bi-box-arrow-right"></i>
-                    Logout
+                    Cancel
                 </button>
-            </form>
+
+                <form
+                    action="{{ route('logout') }}"
+                    method="POST"
+                    style="flex: 1;"
+                >
+
+                    @csrf
+
+                    <button
+                        type="submit"
+                        class="logout-confirm-button w-100"
+                    >
+                        <i class="bi bi-box-arrow-right"></i>
+                        Logout
+                    </button>
+
+                </form>
+
+            </div>
 
         </div>
 
     </div>
-</div>
 
     <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     ></script>
 
-
     <script>
-        /* FLOATING LOGOUT CONFIRMATION */
+        document.addEventListener('DOMContentLoaded', function () {
 
-const logoutButton =
-    document.getElementById('logoutButton');
+            /* LOGOUT CONFIRMATION */
 
-const logoutConfirmation =
-    document.getElementById('logoutConfirmation');
+            const logoutButton =
+                document.getElementById('logoutButton');
 
-const logoutCancel =
-    document.getElementById('logoutCancel');
+            const logoutConfirmation =
+                document.getElementById('logoutConfirmation');
 
-if (
-    logoutButton &&
-    logoutConfirmation &&
-    logoutCancel
-) {
-
-    logoutButton.addEventListener(
-        'click',
-        function () {
-
-            logoutConfirmation.classList.add('show');
-
-        }
-    );
-
-    logoutCancel.addEventListener(
-        'click',
-        function () {
-
-            logoutConfirmation.classList.remove('show');
-
-        }
-    );
-
-    logoutConfirmation.addEventListener(
-        'click',
-        function (event) {
+            const logoutCancel =
+                document.getElementById('logoutCancel');
 
             if (
-                event.target === logoutConfirmation
+                logoutButton &&
+                logoutConfirmation &&
+                logoutCancel
             ) {
 
-                logoutConfirmation.classList.remove(
-                    'show'
+                logoutButton.addEventListener(
+                    'click',
+                    function () {
+                        logoutConfirmation.classList.add('show');
+                    }
                 );
 
-            }
-
-        }
-    );
-
-    document.addEventListener(
-        'keydown',
-        function (event) {
-
-            if (
-                event.key === 'Escape'
-            ) {
-
-                logoutConfirmation.classList.remove(
-                    'show'
+                logoutCancel.addEventListener(
+                    'click',
+                    function () {
+                        logoutConfirmation.classList.remove('show');
+                    }
                 );
 
+                logoutConfirmation.addEventListener(
+                    'click',
+                    function (event) {
+
+                        if (
+                            event.target === logoutConfirmation
+                        ) {
+                            logoutConfirmation.classList.remove('show');
+                        }
+
+                    }
+                );
+
+                document.addEventListener(
+                    'keydown',
+                    function (event) {
+
+                        if (event.key === 'Escape') {
+                            logoutConfirmation.classList.remove('show');
+                        }
+
+                    }
+                );
             }
 
-        }
-    );
-}
+            /* MOBILE SIDEBAR */
 
-        const menuButton =
-            document.getElementById('menuButton');
+            const menuButton =
+                document.getElementById('menuButton');
 
-        const sidebar =
-            document.getElementById('sidebar');
+            const sidebar =
+                document.getElementById('sidebar');
 
+            if (menuButton && sidebar) {
 
-        if (menuButton) {
+                menuButton.addEventListener(
+                    'click',
+                    function () {
+                        sidebar.classList.toggle('show');
+                    }
+                );
 
-            menuButton.addEventListener('click', function () {
+                document.addEventListener(
+                    'click',
+                    function (event) {
 
-                sidebar.classList.toggle('show');
+                        if (
+                            window.innerWidth <= 991 &&
+                            sidebar.classList.contains('show') &&
+                            !sidebar.contains(event.target) &&
+                            !menuButton.contains(event.target)
+                        ) {
+                            sidebar.classList.remove('show');
+                        }
 
-            });
+                    }
+                );
 
-        }
+                window.addEventListener(
+                    'resize',
+                    function () {
 
+                        if (window.innerWidth > 991) {
+                            sidebar.classList.remove('show');
+                        }
 
-        document.addEventListener('click', function (event) {
+                    }
+                );
+            }
+
+            /* FLOATING NOTIFICATIONS */
+
+            const notificationButton =
+                document.getElementById('notificationButton');
+
+            const notificationDropdown =
+                document.getElementById('notificationDropdown');
 
             if (
-                window.innerWidth <= 991 &&
-                sidebar.classList.contains('show') &&
-                !sidebar.contains(event.target) &&
-                !menuButton.contains(event.target)
+                notificationButton &&
+                notificationDropdown
             ) {
 
-                sidebar.classList.remove('show');
+                notificationButton.addEventListener(
+                    'click',
+                    function (event) {
 
+                        event.stopPropagation();
+
+                        notificationDropdown.classList.toggle('show');
+
+                        notificationButton.classList.toggle('active');
+
+                    }
+                );
+
+                notificationDropdown.addEventListener(
+                    'click',
+                    function (event) {
+                        event.stopPropagation();
+                    }
+                );
+
+                document.addEventListener(
+                    'click',
+                    function () {
+
+                        notificationDropdown.classList.remove('show');
+
+                        notificationButton.classList.remove('active');
+
+                    }
+                );
             }
 
         });
-
-
-        window.addEventListener('resize', function () {
-
-            if (window.innerWidth > 991) {
-
-                sidebar.classList.remove('show');
-
-            }
-
-        });
-
-
-        /* FLOATING NOTIFICATION */
-
-        const notificationButton =
-            document.getElementById('notificationButton');
-
-        const notificationDropdown =
-            document.getElementById('notificationDropdown');
-
-
-        if (
-            notificationButton &&
-            notificationDropdown
-        ) {
-
-            notificationButton.addEventListener(
-                'click',
-                function (event) {
-
-                    event.stopPropagation();
-
-                    notificationDropdown.classList.toggle('show');
-
-                    notificationButton.classList.toggle(
-                        'active'
-                    );
-
-                }
-            );
-
-
-            notificationDropdown.addEventListener(
-                'click',
-                function (event) {
-
-                    event.stopPropagation();
-
-                }
-            );
-
-
-            document.addEventListener(
-                'click',
-                function () {
-
-                    notificationDropdown.classList.remove(
-                        'show'
-                    );
-
-                    notificationButton.classList.remove(
-                        'active'
-                    );
-
-                }
-            );
-
-        }
-
     </script>
-
 
     @stack('scripts')
 
 </body>
+
 </html>

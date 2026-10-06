@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\EmailVerificationCode;
+use App\Models\EmailVerification;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
 {
@@ -17,37 +20,42 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-       $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'role' => 'required|in:student,faculty',
             'password' => 'required|min:8|confirmed',
         ]);
 
-       $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'status' => $request->role === 'faculty'
-                ? 'pending'
-                : 'approved',
+        $code = (string) random_int(100000, 999999);
+
+        session([
+            'registration_data' => [
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => $request->role,
+            ],
         ]);
-        
-        
-        
-        
-       if ($user->role === 'faculty') {
-            return redirect('/login')->with(
+
+        session()->forget('verification_user_id');
+
+        EmailVerification::where('email', $request->email)->delete();
+
+        EmailVerification::create([
+            'email' => $request->email,
+            'code' => $code,
+            'expires_at' => now()->addMinutes(10),
+        ]);
+
+        Mail::to($request->email)
+            ->send(new EmailVerificationCode($code));
+
+        return redirect()
+            ->route('verification.show')
+            ->with(
                 'success',
-                'Faculty registration submitted successfully. Your account is pending admin approval. Please wait until an administrator approves your account.'
+                'A 6-digit verification code has been sent to your email address.'
             );
-        }
-
-        Auth::login($user);
-        $request->session()->regenerate();
-
-        return redirect('/student/dashboard');
-
     }
 }

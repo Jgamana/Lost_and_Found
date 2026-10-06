@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LostItem;
 use App\Models\ActivityLog;
+use App\Models\CompensationRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -64,21 +65,15 @@ class LostItemController extends Controller
             'custom_location' => 'nullable|string|max:255',
             'item_name' => 'required|string',
             'description' => 'required|string',
+            'compensation_offer' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'lost_date' => 'required|date',
             'status' => 'nullable|string',
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | CATEGORY VALIDATION
-        |--------------------------------------------------------------------------
-        */
-
         if ($request->category_id === 'custom') {
 
             if (!$request->filled('custom_category')) {
-
                 return back()
                     ->withErrors([
                         'custom_category' =>
@@ -103,16 +98,9 @@ class LostItemController extends Controller
                 ->withInput();
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | LOCATION VALIDATION
-        |--------------------------------------------------------------------------
-        */
-
         if ($request->location_id === 'custom') {
 
             if (!$request->filled('custom_location')) {
-
                 return back()
                     ->withErrors([
                         'custom_location' =>
@@ -137,11 +125,38 @@ class LostItemController extends Controller
                 ->withInput();
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | IMAGE UPLOAD
-        |--------------------------------------------------------------------------
-        */
+        if (
+            $request->filled('compensation_offer') &&
+            $request->category_id !== 'custom' &&
+            $request->filled('category_id')
+        ) {
+
+            $rule = CompensationRule::where(
+                'category_id',
+                $request->category_id
+            )->first();
+
+            if ($rule) {
+
+                $amount = (float) $request->compensation_offer;
+
+                if (
+                    $amount < (float) $rule->min_amount ||
+                    $amount > (float) $rule->max_amount
+                ) {
+                    return back()
+                        ->withErrors([
+                            'compensation_offer' =>
+                                'The compensation offer must be between ₱' .
+                                number_format($rule->min_amount, 2) .
+                                ' and ₱' .
+                                number_format($rule->max_amount, 2) .
+                                ' for this category.'
+                        ])
+                        ->withInput();
+                }
+            }
+        }
 
         $imagePath = null;
 
@@ -151,12 +166,6 @@ class LostItemController extends Controller
                 ->file('image')
                 ->store('lost-items', 'public');
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | CREATE LOST ITEM
-        |--------------------------------------------------------------------------
-        */
 
         $lostItem = LostItem::create([
 
@@ -186,6 +195,11 @@ class LostItemController extends Controller
 
             'description' => $request->description,
 
+            'compensation_offer' =>
+                $request->filled('compensation_offer')
+                    ? $request->compensation_offer
+                    : null,
+
             'image' => $imagePath,
 
             'lost_date' => $request->lost_date,
@@ -195,14 +209,16 @@ class LostItemController extends Controller
 
         ActivityLog::record(
             'Report Lost Item',
-            'Reported lost item: ' . $lostItem->item_name
+            'Reported lost item: ' .
+            $lostItem->item_name .
+            ($lostItem->compensation_offer !== null
+                ? ' with a maximum compensation offer of ₱' .
+                    number_format(
+                        (float) $lostItem->compensation_offer,
+                        2
+                    ) . '.'
+                : ' with no compensation offer.')
         );
-
-        /*
-        |--------------------------------------------------------------------------
-        | REDIRECT BASED ON USER ROLE
-        |--------------------------------------------------------------------------
-        */
 
         if (auth()->user()->role === 'admin') {
 
@@ -240,9 +256,11 @@ class LostItemController extends Controller
         $request->validate([
             'category_id' => 'nullable',
             'custom_category' => 'nullable|string|max:255',
-            'location_id' => 'required|exists:locations,id',
+            'location_id' => 'nullable',
+            'custom_location' => 'nullable|string|max:255',
             'item_name' => 'required|string',
             'description' => 'required|string',
+            'compensation_offer' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'lost_date' => 'required|date',
         ]);
@@ -250,7 +268,6 @@ class LostItemController extends Controller
         if ($request->category_id === 'custom') {
 
             if (!$request->filled('custom_category')) {
-
                 return back()
                     ->withErrors([
                         'custom_category' =>
@@ -273,6 +290,66 @@ class LostItemController extends Controller
                         'Please select a category or enter a custom category.'
                 ])
                 ->withInput();
+        }
+
+        if ($request->location_id === 'custom') {
+
+            if (!$request->filled('custom_location')) {
+                return back()
+                    ->withErrors([
+                        'custom_location' =>
+                            'Please enter a custom location.'
+                    ])
+                    ->withInput();
+            }
+
+        } elseif ($request->filled('location_id')) {
+
+            $request->validate([
+                'location_id' => 'exists:locations,id',
+            ]);
+
+        } else {
+
+            return back()
+                ->withErrors([
+                    'location_id' =>
+                        'Please select a location or enter a custom location.'
+                ])
+                ->withInput();
+        }
+
+        if (
+            $request->filled('compensation_offer') &&
+            $request->category_id !== 'custom' &&
+            $request->filled('category_id')
+        ) {
+
+            $rule = CompensationRule::where(
+                'category_id',
+                $request->category_id
+            )->first();
+
+            if ($rule) {
+
+                $amount = (float) $request->compensation_offer;
+
+                if (
+                    $amount < (float) $rule->min_amount ||
+                    $amount > (float) $rule->max_amount
+                ) {
+                    return back()
+                        ->withErrors([
+                            'compensation_offer' =>
+                                'The compensation offer must be between ₱' .
+                                number_format($rule->min_amount, 2) .
+                                ' and ₱' .
+                                number_format($rule->max_amount, 2) .
+                                ' for this category.'
+                        ])
+                        ->withInput();
+                }
+            }
         }
 
         $imagePath = $lostItem->image;
@@ -301,11 +378,24 @@ class LostItemController extends Controller
                     ? $request->custom_category
                     : null,
 
-            'location_id' => $request->location_id,
+            'location_id' =>
+                $request->location_id === 'custom'
+                    ? null
+                    : $request->location_id,
+
+            'custom_location' =>
+                $request->location_id === 'custom'
+                    ? $request->custom_location
+                    : null,
 
             'item_name' => $request->item_name,
 
             'description' => $request->description,
+
+            'compensation_offer' =>
+                $request->filled('compensation_offer')
+                    ? $request->compensation_offer
+                    : null,
 
             'image' => $imagePath,
 
@@ -314,7 +404,15 @@ class LostItemController extends Controller
 
         ActivityLog::record(
             'Update Lost Item',
-            'Updated lost item: ' . $lostItem->item_name
+            'Updated lost item: ' .
+            $lostItem->item_name .
+            ($lostItem->compensation_offer !== null
+                ? ' with a maximum compensation offer of ₱' .
+                    number_format(
+                        (float) $lostItem->compensation_offer,
+                        2
+                    ) . '.'
+                : ' with no compensation offer.')
         );
 
         return redirect()
@@ -342,7 +440,8 @@ class LostItemController extends Controller
 
         ActivityLog::record(
             'Delete Lost Item',
-            'Deleted lost item: ' . $lostItem->item_name
+            'Deleted lost item: ' .
+            $lostItem->item_name
         );
 
         $lostItem->delete();
@@ -434,7 +533,8 @@ class LostItemController extends Controller
                 if (
                     $lostItem->category_id &&
                     $foundItem->category_id &&
-                    $lostItem->category_id == $foundItem->category_id
+                    $lostItem->category_id ==
+                    $foundItem->category_id
                 ) {
                     $score += 40;
                 }
@@ -442,7 +542,8 @@ class LostItemController extends Controller
                 if (
                     $lostItem->location_id &&
                     $foundItem->location_id &&
-                    $lostItem->location_id == $foundItem->location_id
+                    $lostItem->location_id ==
+                    $foundItem->location_id
                 ) {
                     $score += 30;
                 }
@@ -453,7 +554,9 @@ class LostItemController extends Controller
                     $nameSimilarity
                 );
 
-                $score += round($nameSimilarity * 0.2);
+                $score += round(
+                    $nameSimilarity * 0.2
+                );
 
                 similar_text(
                     strtolower($lostItem->description),
@@ -461,7 +564,9 @@ class LostItemController extends Controller
                     $descriptionSimilarity
                 );
 
-                $score += round($descriptionSimilarity * 0.1);
+                $score += round(
+                    $descriptionSimilarity * 0.1
+                );
 
                 $foundItem->match_score = min(
                     $score,
@@ -469,10 +574,12 @@ class LostItemController extends Controller
                 );
 
                 return $foundItem;
+
             })
             ->filter(function ($foundItem) {
 
                 return $foundItem->match_score >= 40;
+
             })
             ->sortByDesc('match_score')
             ->values();
@@ -537,12 +644,14 @@ class LostItemController extends Controller
         $lostItem = LostItem::findOrFail($id);
 
         if ($lostItem->image) {
-            Storage::disk('public')->delete($lostItem->image);
+            Storage::disk('public')
+                ->delete($lostItem->image);
         }
 
         ActivityLog::record(
             'Delete Lost Item',
-            'Admin deleted lost item: ' . $lostItem->item_name
+            'Admin deleted lost item: ' .
+            $lostItem->item_name
         );
 
         $lostItem->delete();

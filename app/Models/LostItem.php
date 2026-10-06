@@ -10,16 +10,22 @@ class LostItem extends Model
     use HasFactory;
 
     protected $fillable = [
-    'user_id',
-    'category_id',
-    'custom_category',
-    'location_id',
-    'custom_location',
-    'item_name',
-    'description',
-    'image',
-    'lost_date',
-    'status',
+        'user_id',
+        'category_id',
+        'custom_category',
+        'location_id',
+        'custom_location',
+        'item_name',
+        'description',
+        'compensation_offer',
+        'image',
+        'lost_date',
+        'status',
+    ];
+
+    protected $casts = [
+        'compensation_offer' => 'decimal:2',
+        'lost_date' => 'date',
     ];
 
     public function user()

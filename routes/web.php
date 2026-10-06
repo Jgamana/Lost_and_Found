@@ -11,6 +11,7 @@ use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompensationController;
 use App\Http\Controllers\AdminReportController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,20 +19,35 @@ use App\Http\Controllers\AdminReportController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
+Route::get('/lost-found', function () {
 
     if (!auth()->check()) {
-        return redirect()->route('login');
+        return view('welcome');
     }
 
     return match (auth()->user()->role) {
         'student' => redirect()->route('student.dashboard'),
         'faculty' => redirect()->route('faculty.dashboard'),
         'admin' => redirect()->route('admin.dashboard'),
-        default => redirect()->route('login'),
+        default => redirect()->route('landing'),
     };
 
-});
+})->name('landing');
+
+Route::get('/verify-email', [
+    EmailVerificationController::class,
+    'show'
+])->name('verification.show');
+
+Route::post('/verify-email', [
+    EmailVerificationController::class,
+    'verify'
+])->name('verification.verify');
+
+Route::post('/verify-email/resend', [
+    EmailVerificationController::class,
+    'resend'
+])->name('verification.resend');
 
 
 /*
