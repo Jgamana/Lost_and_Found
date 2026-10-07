@@ -16,20 +16,20 @@ class LoginController extends Controller
     */
 
     public function showLogin()
-{
-    if (Auth::check()) {
-        $user = Auth::user();
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
 
-        return match ($user->role) {
-            'student' => redirect()->route('student.dashboard'),
-            'faculty' => redirect()->route('faculty.dashboard'),
-            'admin' => redirect()->route('admin.dashboard'),
-            default => redirect()->route('landing'),
-        };
+            return match ($user->role) {
+                'student' => redirect()->route('student.dashboard'),
+                'faculty' => redirect()->route('faculty.dashboard'),
+                'admin' => redirect()->route('admin.dashboard'),
+                default => redirect()->route('landing'),
+            };
+        }
+
+        return redirect()->route('landing');
     }
-
-    return redirect()->route('landing');
-}
 
     public function login(Request $request)
     {
@@ -61,6 +61,7 @@ class LoginController extends Controller
                     ->withErrors([
                         'email' => 'Your account has been deactivated. Please contact the administrator.',
                     ])
+                    ->with('auth_form', 'login')
                     ->onlyInput('email');
             }
 
@@ -86,6 +87,7 @@ class LoginController extends Controller
                     ->withErrors([
                         'email' => 'Your faculty account is pending admin approval. Please wait until an administrator approves your account.',
                     ])
+                    ->with('auth_form', 'login')
                     ->onlyInput('email');
             }
 
@@ -111,6 +113,7 @@ class LoginController extends Controller
                     ->withErrors([
                         'email' => 'Your faculty account registration was rejected by the administrator.',
                     ])
+                    ->with('auth_form', 'login')
                     ->onlyInput('email');
             }
 
@@ -133,6 +136,7 @@ class LoginController extends Controller
                     ->withErrors([
                         'email' => 'Your account is not currently approved.',
                     ])
+                    ->with('auth_form', 'login')
                     ->onlyInput('email');
             }
 
@@ -183,6 +187,7 @@ class LoginController extends Controller
             ->withErrors([
                 'email' => 'The provided email or password is incorrect.',
             ])
+            ->with('auth_form', 'login')
             ->onlyInput('email');
     }
 
@@ -193,21 +198,21 @@ class LoginController extends Controller
     */
 
     public function logout(Request $request)
-{
-    if (Auth::check()) {
-        ActivityLog::record(
-            'Logout',
-            'User logged out successfully.'
-        );
+    {
+        if (Auth::check()) {
+            ActivityLog::record(
+                'Logout',
+                'User logged out successfully.'
+            );
+        }
+
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()
+            ->route('landing')
+            ->with('open_login', true);
     }
-
-    Auth::logout();
-
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-
-    return redirect()
-        ->route('landing')
-        ->with('open_login', true);
-}
 }

@@ -5,15 +5,17 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Mail\EmailVerificationCode;
 use App\Models\EmailVerification;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class EmailVerificationController extends Controller
 {
     public function show()
     {
-        if (!session()->has('verification_user_id')) {
-            return redirect('/register');
+        if (!session()->has('registration_data')) {
+            return redirect()->route('landing');
         }
 
         return view('auth.verify-email');
@@ -25,11 +27,19 @@ class EmailVerificationController extends Controller
             'code' => 'required|digits:6',
         ]);
 
-        $userId = session('verification_user_id');
+        $registrationData = session('registration_data');
+
+        if (!$registrationData) {
+            return redirect()
+                ->route('landing')
+                ->withErrors([
+                    'email' => 'Registration session expired. Please register again.',
+                ]);
+        }
 
         $verification = EmailVerification::where(
-            'user_id',
-            $userId
+            'email',
+            $registrationData['email']
         )->first();
 
         if (!$verification) {
@@ -50,41 +60,47 @@ class EmailVerificationController extends Controller
             ]);
         }
 
-        $user = $verification->user;
-
-        $user->update([
+        $user = User::create([
+            'name' => $registrationData['name'],
+            'email' => $registrationData['email'],
+            'password' => $registrationData['password'],
+            'role' => $registrationData['role'],
+            'status' => $registrationData['role'] === 'faculty'
+                ? 'pending'
+                : 'approved',
+            'is_active' => true,
             'email_verified_at' => now(),
         ]);
 
         $verification->delete();
 
-        session()->forget('verification_user_id');
+        session()->forget('registration_data');
 
         if ($user->role === 'faculty') {
-            return redirect('/login')->with(
-                'success',
-                'Email verified successfully. Your faculty account is now pending admin approval.'
-            );
+            return redirect()
+                ->route('landing')
+                ->with('success', 'Email verified successfully. Your faculty account is now pending admin approval.')
+                ->with('auth_form', 'login');
         }
 
-        auth()->login($user);
+        Auth::login($user);
 
         $request->session()->regenerate();
 
-        return view('auth.verification-success');
+        return redirect()->route('student.dashboard');
     }
 
     public function resend()
     {
-        $userId = session('verification_user_id');
+        $registrationData = session('registration_data');
 
-        if (!$userId) {
-            return redirect('/register');
+        if (!$registrationData) {
+            return redirect()->route('landing');
         }
 
         $verification = EmailVerification::where(
-            'user_id',
-            $userId
+            'email',
+            $registrationData['email']
         )->first();
 
         if (!$verification) {
@@ -100,7 +116,7 @@ class EmailVerificationController extends Controller
             'expires_at' => now()->addMinutes(10),
         ]);
 
-        Mail::to($verification->user->email)
+        Mail::to($registrationData['email'])
             ->send(new EmailVerificationCode($code));
 
         return back()->with(

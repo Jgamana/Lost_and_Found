@@ -1049,19 +1049,6 @@
                 gap: 12px;
             }
 
-            .nav-link-item {
-                display: none;
-            }
-
-            .nav-login {
-                font-size: 12px;
-            }
-
-            .nav-register {
-                padding: 9px 13px;
-                font-size: 12px;
-            }
-
             .hero {
                 min-height: auto;
             }
@@ -1223,6 +1210,630 @@
             }
         }
 
+
+        /* --------------------------------------------------
+           SMALL MODERN ANIMATIONS
+        -------------------------------------------------- */
+
+        /* Initial page entrance */
+        @keyframes lfPageFade {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        body {
+            animation: lfPageFade 0.45s ease-out both;
+        }
+
+
+        /* Navbar entrance */
+        @keyframes lfNavbarDown {
+            from {
+                opacity: 0;
+                transform: translateY(-12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .landing-navbar {
+            animation: lfNavbarDown 0.55s ease-out both;
+        }
+
+
+        /* Hero content entrance */
+        @keyframes lfHeroLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hero-content {
+            animation: lfHeroLeft 0.7s ease-out 0.12s both;
+        }
+
+
+        /* Hero visual entrance */
+        @keyframes lfHeroVisual {
+            from {
+                opacity: 0;
+                transform: translateX(18px) scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        .hero-visual {
+            animation: lfHeroVisual 0.75s ease-out 0.2s both;
+        }
+
+
+        /* Gentle floating animation for the hero decoration */
+        @keyframes lfFloat {
+            0% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-7px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .visual-icon-main {
+            animation: lfFloat 3.5s ease-in-out infinite;
+        }
+
+        .visual-floating-one {
+            animation: lfFloat 3s ease-in-out 0.2s infinite;
+        }
+
+        .visual-floating-two {
+            animation: lfFloat 3.4s ease-in-out 0.5s infinite;
+        }
+
+        .visual-floating-three {
+            animation: lfFloat 3.2s ease-in-out 0.8s infinite;
+        }
+
+
+        /* Soft movement for the decorative circles */
+        @keyframes lfCircleFloat {
+            0% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-5px) scale(1.015);
+            }
+
+            100% {
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .visual-circle-large {
+            animation: lfCircleFloat 5s ease-in-out infinite;
+        }
+
+        .visual-circle-small {
+            animation: lfCircleFloat 4s ease-in-out 0.5s infinite;
+        }
+
+        .visual-circle-bottom {
+            animation: lfCircleFloat 4.5s ease-in-out 1s infinite;
+        }
+
+
+        /* Scroll reveal */
+        .lf-reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition:
+                opacity 0.65s ease,
+                transform 0.65s ease;
+        }
+
+        .lf-reveal.lf-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        /* Stagger feature cards */
+        .feature-card.lf-reveal:nth-child(2) {
+            transition-delay: 0.08s;
+        }
+
+        .feature-card.lf-reveal:nth-child(3) {
+            transition-delay: 0.16s;
+        }
+
+
+        /* Stagger process cards */
+        .step-card.lf-reveal:nth-child(2) {
+            transition-delay: 0.08s;
+        }
+
+        .step-card.lf-reveal:nth-child(3) {
+            transition-delay: 0.16s;
+        }
+
+
+        /* Slightly stronger hover for the cards */
+        .feature-card,
+        .step-card {
+            will-change: transform;
+        }
+
+        .feature-card:hover,
+        .step-card:hover {
+            transform: translateY(-5px);
+        }
+
+
+        /* About card entrance */
+        .about-card.lf-reveal {
+            transform: translateY(25px) scale(0.99);
+        }
+
+        .about-card.lf-reveal.lf-visible {
+            transform: translateY(0) scale(1);
+        }
+
+
+
+        /* --------------------------------------------------
+           RESPONSIVE IMPROVEMENTS
+        -------------------------------------------------- */
+
+        .mobile-menu-button {
+            display: none;
+            width: 42px;
+            height: 42px;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            background: white;
+            color: var(--teal);
+            font-size: 21px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .mobile-menu-button:hover {
+            background: #f3f8f7;
+        }
+
+        @media (max-width: 1100px) {
+            .navbar-container,
+            .hero-container,
+            .section-container,
+            .footer-container {
+                width: min(100% - 36px, 1040px);
+            }
+
+            .hero-container {
+                gap: 45px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .navbar-container {
+                min-height: 70px;
+            }
+
+            .nav-links {
+                gap: 18px;
+            }
+
+            .hero-container {
+                grid-template-columns: minmax(0, 1fr) minmax(280px, 0.75fr);
+                gap: 35px;
+                padding: 65px 0;
+            }
+
+            .hero-title {
+                font-size: clamp(40px, 5vw, 56px);
+            }
+
+            .hero-visual {
+                min-height: 330px;
+            }
+
+            .visual-circle-large {
+                width: 270px;
+                height: 270px;
+            }
+
+            .visual-icon-main {
+                width: 145px;
+                height: 145px;
+                font-size: 66px;
+            }
+
+            .feature-grid,
+            .steps-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 820px) {
+            .mobile-menu-button {
+                display: inline-flex;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: calc(100% + 1px);
+                left: 0;
+                right: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.98);
+                border: 1px solid var(--border);
+                border-top: none;
+                border-radius: 0 0 16px 16px;
+                box-shadow: 0 15px 30px rgba(41, 73, 71, 0.10);
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+                transform: translateY(-8px);
+                transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+            }
+
+            .nav-links.mobile-open {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
+                transform: translateY(0);
+            }
+
+            .nav-link-item,
+            .nav-login,
+            .nav-register {
+                width: 100%;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 10px 13px;
+                border-radius: 10px;
+                font-size: 13px;
+            }
+
+            .nav-link-item:hover,
+            .nav-login:hover {
+                background: #f3f8f7;
+            }
+
+            .nav-register {
+                justify-content: center;
+                margin-top: 5px;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 55px 0 45px;
+            }
+
+            .hero-content {
+                max-width: 760px;
+                text-align: center;
+                margin: auto;
+            }
+
+            .hero-label {
+                justify-content: center;
+            }
+
+            .hero-text {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                min-height: 280px;
+                max-width: 500px;
+                width: 100%;
+                margin: auto;
+            }
+
+            .section {
+                padding: 70px 0;
+            }
+
+            .section-heading {
+                margin-bottom: 35px;
+            }
+
+            .about-section {
+                padding-bottom: 75px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar-container,
+            .hero-container,
+            .section-container,
+            .footer-container {
+                width: calc(100% - 28px);
+            }
+
+            .brand {
+                min-width: 0;
+                font-size: 13px;
+            }
+
+            .brand-icon {
+                width: 36px;
+                height: 36px;
+                flex: 0 0 36px;
+            }
+
+            .hero-title {
+                font-size: clamp(34px, 10vw, 44px);
+                line-height: 1.08;
+                letter-spacing: -1.2px;
+            }
+
+            .hero-text {
+                font-size: 14px;
+                line-height: 1.75;
+            }
+
+            .hero-actions {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+                max-width: 390px;
+                margin: 0 auto;
+            }
+
+            .hero-button {
+                width: 100%;
+                min-height: 46px;
+            }
+
+            .hero-visual {
+                min-height: 245px;
+            }
+
+            .visual-circle-large {
+                width: 205px;
+                height: 205px;
+            }
+
+            .visual-circle-small {
+                width: 78px;
+                height: 78px;
+                right: 5%;
+                top: 10px;
+            }
+
+            .visual-circle-bottom {
+                width: 58px;
+                height: 58px;
+                left: 7%;
+                bottom: 15px;
+            }
+
+            .visual-icon-main {
+                width: 112px;
+                height: 112px;
+                font-size: 48px;
+            }
+
+            .visual-floating {
+                width: 47px;
+                height: 47px;
+                border-radius: 14px;
+                font-size: 19px;
+            }
+
+            .visual-floating-one {
+                left: 6%;
+                top: 48px;
+            }
+
+            .visual-floating-two {
+                right: 5%;
+                bottom: 32px;
+            }
+
+            .visual-floating-three {
+                right: 17%;
+                top: 34px;
+            }
+
+            .section {
+                padding: 58px 0;
+            }
+
+            .section-title {
+                font-size: clamp(27px, 8vw, 34px);
+            }
+
+            .section-text {
+                font-size: 13px;
+            }
+
+            .feature-grid,
+            .steps-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .feature-card,
+            .step-card {
+                min-height: 0;
+                padding: 22px;
+            }
+
+            .about-card {
+                padding: 30px 22px;
+                border-radius: 20px;
+            }
+
+            .about-title {
+                font-size: clamp(24px, 7vw, 29px);
+                line-height: 1.2;
+            }
+
+            .about-text {
+                font-size: 12px;
+                line-height: 1.75;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 8px;
+            }
+
+            .auth-overlay {
+                padding: 10px;
+                align-items: flex-start;
+                padding-top: 18px;
+            }
+
+            .auth-modal,
+            .auth-modal.register-modal {
+                width: 100%;
+                max-width: 100%;
+                max-height: calc(100vh - 36px);
+                border-radius: 18px;
+                padding: 27px 20px 22px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .navbar-container {
+                width: calc(100% - 20px);
+            }
+
+            .brand {
+                font-size: 12px;
+                gap: 7px;
+            }
+
+            .brand-icon {
+                width: 34px;
+                height: 34px;
+                flex-basis: 34px;
+                font-size: 17px;
+            }
+
+            .mobile-menu-button {
+                width: 38px;
+                height: 38px;
+                font-size: 19px;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .hero-text {
+                font-size: 13px;
+            }
+
+            .hero-visual {
+                min-height: 220px;
+            }
+
+            .visual-circle-large {
+                width: 180px;
+                height: 180px;
+            }
+
+            .visual-icon-main {
+                width: 98px;
+                height: 98px;
+                font-size: 42px;
+            }
+
+            .visual-floating {
+                width: 43px;
+                height: 43px;
+                font-size: 17px;
+            }
+
+            .visual-floating-one {
+                left: 3%;
+                top: 45px;
+            }
+
+            .visual-floating-two {
+                right: 2%;
+                bottom: 27px;
+            }
+
+            .visual-floating-three {
+                right: 12%;
+                top: 29px;
+            }
+
+            .about-card {
+                padding: 26px 18px;
+            }
+
+            .auth-modal,
+            .auth-modal.register-modal {
+                padding-left: 17px;
+                padding-right: 17px;
+            }
+        }
+
+
+        /* Respect reduced-motion accessibility setting */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+
+            .lf-reveal {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
+
     </style>
 
 </head>
@@ -1250,31 +1861,22 @@
 
         <div class="nav-links">
 
-            <a
-                href="#features"
-                class="nav-link-item"
-            >
+            <a href="#features" class="nav-link-item" onclick="closeMobileMenu()">
                 Features
             </a>
 
-            <a
-                href="#how-it-works"
-                class="nav-link-item"
-            >
+            <a href="#how-it-works" class="nav-link-item" onclick="closeMobileMenu()">
                 How It Works
             </a>
 
-            <a
-                href="#about"
-                class="nav-link-item"
-            >
+            <a href="#about" class="nav-link-item" onclick="closeMobileMenu()">
                 About
             </a>
 
             <button
                 type="button"
                 class="nav-login"
-                onclick="openAuthModal('login')"
+                onclick="closeMobileMenu(); openAuthModal('login')"
             >
                 Login
             </button>
@@ -1282,12 +1884,23 @@
             <button
                 type="button"
                 class="nav-register"
-                onclick="openAuthModal('register')"
+                onclick="closeMobileMenu(); openAuthModal('register')"
             >
                 Create Account
             </button>
 
         </div>
+
+        <button
+            type="button"
+            class="mobile-menu-button"
+            id="mobileMenuButton"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            onclick="toggleMobileMenu()"
+        >
+            <i class="bi bi-list"></i>
+        </button>
 
     </div>
 
@@ -2308,6 +2921,85 @@
     );
 
 
+
+    /* --------------------------------------------------
+       MOBILE NAVIGATION
+    -------------------------------------------------- */
+
+    function toggleMobileMenu() {
+
+        const menu = document.querySelector('.nav-links');
+        const button = document.getElementById('mobileMenuButton');
+
+        if (!menu || !button) {
+            return;
+        }
+
+        const isOpen = menu.classList.toggle('mobile-open');
+
+        button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        button.setAttribute(
+            'aria-label',
+            isOpen ? 'Close navigation menu' : 'Open navigation menu'
+        );
+
+        const icon = button.querySelector('i');
+
+        if (icon) {
+            icon.className = isOpen ? 'bi bi-x-lg' : 'bi bi-list';
+        }
+    }
+
+
+    function closeMobileMenu() {
+
+        const menu = document.querySelector('.nav-links');
+        const button = document.getElementById('mobileMenuButton');
+
+        if (!menu || !button) {
+            return;
+        }
+
+        menu.classList.remove('mobile-open');
+
+        button.setAttribute('aria-expanded', 'false');
+        button.setAttribute('aria-label', 'Open navigation menu');
+
+        const icon = button.querySelector('i');
+
+        if (icon) {
+            icon.className = 'bi bi-list';
+        }
+    }
+
+
+    document.addEventListener('click', function (event) {
+
+        const menu = document.querySelector('.nav-links');
+        const button = document.getElementById('mobileMenuButton');
+
+        if (!menu || !button) {
+            return;
+        }
+
+        if (
+            menu.classList.contains('mobile-open') &&
+            !menu.contains(event.target) &&
+            !button.contains(event.target)
+        ) {
+            closeMobileMenu();
+        }
+    });
+
+
+    window.addEventListener('resize', function () {
+
+        if (window.innerWidth > 820) {
+            closeMobileMenu();
+        }
+    });
+
+
     document.addEventListener(
         'DOMContentLoaded',
         function () {
@@ -2410,6 +3102,74 @@
 
         }
     );
+
+
+        /* --------------------------------------------------
+           SMALL SCROLL ANIMATIONS
+        -------------------------------------------------- */
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+
+                const revealElements = document.querySelectorAll(
+                    '.section-heading, .feature-card, .step-card, .about-card'
+                );
+
+                if (!revealElements.length) {
+                    return;
+                }
+
+                revealElements.forEach(function (element) {
+                    element.classList.add('lf-reveal');
+                });
+
+
+                /* Show elements when they enter the viewport */
+                if ('IntersectionObserver' in window) {
+
+                    const revealObserver =
+                        new IntersectionObserver(
+                            function (entries, observer) {
+
+                                entries.forEach(function (entry) {
+
+                                    if (entry.isIntersecting) {
+
+                                        entry.target.classList.add(
+                                            'lf-visible'
+                                        );
+
+                                        observer.unobserve(
+                                            entry.target
+                                        );
+                                    }
+
+                                });
+
+                            },
+                            {
+                                threshold: 0.12,
+                                rootMargin: '0px 0px -35px 0px'
+                            }
+                        );
+
+
+                    revealElements.forEach(function (element) {
+                        revealObserver.observe(element);
+                    });
+
+                } else {
+
+                    /* Fallback for older browsers */
+                    revealElements.forEach(function (element) {
+                        element.classList.add('lf-visible');
+                    });
+
+                }
+
+            }
+        );
 
 </script>
 

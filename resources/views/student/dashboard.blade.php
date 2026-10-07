@@ -58,6 +58,26 @@
     margin: 0;
 }
 
+.dashboard-hero-button {
+    background: #3f6664;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 11px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: all .2s ease;
+}
+
+.dashboard-hero-button:hover {
+    background: #294b4a;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
 .dashboard-card {
     background: #ffffff;
     border: 0;
@@ -383,6 +403,18 @@
             <p class="dashboard-subtitle">
                 Manage your lost and found reports, claims, and possible matches.
             </p>
+
+            <div class="mt-4">
+
+                <a
+                    href="{{ route('student.found-items') }}"
+                    class="dashboard-hero-button"
+                >
+                    <i class="bi bi-grid me-2"></i>
+                    Browse Found Items
+                </a>
+
+            </div>
 
         </div>
 
