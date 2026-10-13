@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('title', 'Report Lost Item')
@@ -146,10 +147,26 @@ textarea.report-lost-form-control {
     margin-top: 6px;
 }
 
+/* Validation error messages */
 .report-lost-error {
-    color: #bd5555;
-    font-size: 11px;
+    color: #dc3545;
+    font-size: 12px;
+    font-weight: 600;
     margin-top: 6px;
+}
+
+/* Red styling for fields with validation errors */
+.report-lost-form-control.is-invalid,
+.report-lost-form-select.is-invalid {
+    border: 1px solid #dc3545 !important;
+    background-color: #fff8f8;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.10);
+}
+
+.report-lost-form-control.is-invalid:focus,
+.report-lost-form-select.is-invalid:focus {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
 }
 
 .report-lost-alert {
@@ -272,9 +289,8 @@ textarea.report-lost-form-control {
 <div class="report-lost-page">
 
     <div class="report-lost-heading">
-
         <div class="report-lost-label">
-            Lost & Found
+            Lost &amp; Found
         </div>
 
         <h1 class="report-lost-title">
@@ -284,39 +300,26 @@ textarea.report-lost-form-control {
         <p class="report-lost-description">
             Report an item you have lost so it can be monitored and matched with found items.
         </p>
-
     </div>
 
     @if($errors->any())
-
         <div class="alert alert-danger report-lost-alert">
-
             <i class="bi bi-exclamation-circle me-2"></i>
 
             <strong>Please check the following:</strong>
 
             <ul class="mb-0 mt-2">
-
                 @foreach($errors->all() as $error)
-
-                    <li>
-                        {{ $error }}
-                    </li>
-
+                    <li>{{ $error }}</li>
                 @endforeach
-
             </ul>
-
         </div>
-
     @endif
 
     <div class="report-lost-wrapper">
-
         <div class="report-lost-card">
 
             <div class="report-lost-card-header">
-
                 <div class="report-lost-section">
 
                     <div class="report-lost-section-icon">
@@ -324,7 +327,6 @@ textarea.report-lost-form-control {
                     </div>
 
                     <div>
-
                         <div class="report-lost-section-title">
                             Lost Item Information
                         </div>
@@ -332,11 +334,9 @@ textarea.report-lost-form-control {
                         <p class="report-lost-section-text">
                             Provide accurate details about the item you lost.
                         </p>
-
                     </div>
 
                 </div>
-
             </div>
 
             <div class="report-lost-card-body">
@@ -348,36 +348,39 @@ textarea.report-lost-form-control {
                     method="POST"
                     enctype="multipart/form-data"
                 >
-
                     @csrf
+
+                    {{-- Date Lost --}}
 
                     <div class="report-lost-form-group">
 
                         <label
-                            for="item_name"
+                            for="lost_date"
                             class="report-lost-form-label"
                         >
-                            Item Name
+                            Date Lost <span style="color: #dc3545;">*</span>
                         </label>
 
                         <input
-                            type="text"
-                            name="item_name"
-                            id="item_name"
-                            class="report-lost-form-control"
-                            value="{{ old('item_name') }}"
-                            placeholder="Example: Black Wallet"
+                            type="date"
+                            name="lost_date"
+                            id="lost_date"
+                            class="report-lost-form-control @error('lost_date') is-invalid @enderror"
+                            value="{{ old('lost_date') }}"
+                            max="{{ now()->format('Y-m-d') }}"
                             required
                         >
 
-                        @error('item_name')
+                        @error('lost_date')
                             <div class="report-lost-error">
+                                <i class="bi bi-exclamation-circle me-1"></i>
                                 {{ $message }}
                             </div>
                         @enderror
 
                     </div>
 
+                    {{-- Category --}}
 
                     <div class="report-lost-form-group">
 
@@ -391,23 +394,18 @@ textarea.report-lost-form-control {
                         <select
                             name="category_id"
                             id="category_id"
-                            class="report-lost-form-select"
+                            class="report-lost-form-select @error('category_id') is-invalid @enderror"
                             required
                         >
-
-                            <option value="">
-                                Select Category
-                            </option>
+                            <option value="">Select Category</option>
 
                             @foreach($categories as $category)
-
                                 <option
                                     value="{{ $category->id }}"
                                     {{ old('category_id') == $category->id ? 'selected' : '' }}
                                 >
                                     {{ $category->name }}
                                 </option>
-
                             @endforeach
 
                             <option
@@ -416,23 +414,23 @@ textarea.report-lost-form-control {
                             >
                                 Other / Custom Category
                             </option>
-
                         </select>
 
                         @error('category_id')
                             <div class="report-lost-error">
+                                <i class="bi bi-exclamation-circle me-1"></i>
                                 {{ $message }}
                             </div>
                         @enderror
 
                     </div>
 
+                    {{-- Custom Category --}}
 
                     <div
                         class="report-lost-form-group report-lost-custom"
                         id="custom-category-container"
                     >
-
                         <label
                             for="custom_category"
                             class="report-lost-form-label"
@@ -444,7 +442,7 @@ textarea.report-lost-form-control {
                             type="text"
                             name="custom_category"
                             id="custom_category"
-                            class="report-lost-form-control"
+                            class="report-lost-form-control @error('custom_category') is-invalid @enderror"
                             value="{{ old('custom_category') }}"
                             placeholder="Example: Calculator"
                         >
@@ -455,12 +453,13 @@ textarea.report-lost-form-control {
 
                         @error('custom_category')
                             <div class="report-lost-error">
+                                <i class="bi bi-exclamation-circle me-1"></i>
                                 {{ $message }}
                             </div>
                         @enderror
-
                     </div>
 
+                    {{-- Location --}}
 
                     <div class="report-lost-form-group">
 
@@ -474,23 +473,18 @@ textarea.report-lost-form-control {
                         <select
                             name="location_id"
                             id="location_id"
-                            class="report-lost-form-select"
+                            class="report-lost-form-select @error('location_id') is-invalid @enderror"
                             required
                         >
-
-                            <option value="">
-                                Select Location
-                            </option>
+                            <option value="">Select Location</option>
 
                             @foreach($locations as $location)
-
                                 <option
                                     value="{{ $location->id }}"
                                     {{ old('location_id') == $location->id ? 'selected' : '' }}
                                 >
                                     {{ $location->name }}
                                 </option>
-
                             @endforeach
 
                             <option
@@ -499,23 +493,23 @@ textarea.report-lost-form-control {
                             >
                                 Other / Custom Location
                             </option>
-
                         </select>
 
                         @error('location_id')
                             <div class="report-lost-error">
+                                <i class="bi bi-exclamation-circle me-1"></i>
                                 {{ $message }}
                             </div>
                         @enderror
 
                     </div>
 
+                    {{-- Custom Location --}}
 
                     <div
                         class="report-lost-form-group report-lost-custom"
                         id="custom-location-container"
                     >
-
                         <label
                             for="custom_location"
                             class="report-lost-form-label"
@@ -527,7 +521,7 @@ textarea.report-lost-form-control {
                             type="text"
                             name="custom_location"
                             id="custom_location"
-                            class="report-lost-form-control"
+                            class="report-lost-form-control @error('custom_location') is-invalid @enderror"
                             value="{{ old('custom_location') }}"
                             placeholder="Example: 2nd Floor, Room 204"
                         >
@@ -538,39 +532,13 @@ textarea.report-lost-form-control {
 
                         @error('custom_location')
                             <div class="report-lost-error">
+                                <i class="bi bi-exclamation-circle me-1"></i>
                                 {{ $message }}
                             </div>
                         @enderror
-
                     </div>
 
-
-                    <div class="report-lost-form-group">
-
-                        <label
-                            for="lost_date"
-                            class="report-lost-form-label"
-                        >
-                            Date Lost
-                        </label>
-
-                        <input
-                            type="date"
-                            name="lost_date"
-                            id="lost_date"
-                            class="report-lost-form-control"
-                            value="{{ old('lost_date') }}"
-                            required
-                        >
-
-                        @error('lost_date')
-                            <div class="report-lost-error">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
-                    </div>
-
+                    {{-- Description --}}
 
                     <div class="report-lost-form-group">
 
@@ -585,22 +553,23 @@ textarea.report-lost-form-control {
                             name="description"
                             id="description"
                             rows="5"
-                            class="report-lost-form-control"
+                            class="report-lost-form-control @error('description') is-invalid @enderror"
                             placeholder="Describe the item's color, brand, size, identifying marks, and other details."
                             required
                         >{{ old('description') }}</textarea>
 
                         @error('description')
                             <div class="report-lost-error">
+                                <i class="bi bi-exclamation-circle me-1"></i>
                                 {{ $message }}
                             </div>
                         @enderror
 
                     </div>
 
+                    {{-- Compensation --}}
 
                     <div class="report-lost-form-group">
-
                         <div class="report-lost-compensation">
 
                             <label
@@ -612,7 +581,6 @@ textarea.report-lost-form-control {
                                 <span style="color: var(--muted); font-weight: 400;">
                                     (Optional)
                                 </span>
-
                             </label>
 
                             <div class="report-lost-compensation-input">
@@ -625,7 +593,7 @@ textarea.report-lost-form-control {
                                     type="number"
                                     name="compensation_offer"
                                     id="compensation_offer"
-                                    class="report-lost-form-control"
+                                    class="report-lost-form-control @error('compensation_offer') is-invalid @enderror"
                                     value="{{ old('compensation_offer') }}"
                                     min="0"
                                     step="0.01"
@@ -639,17 +607,16 @@ textarea.report-lost-form-control {
                             </div>
 
                             @error('compensation_offer')
-
                                 <div class="report-lost-error">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
                                     {{ $message }}
                                 </div>
-
                             @enderror
 
                         </div>
-
                     </div>
 
+                    {{-- Image --}}
 
                     <div class="report-lost-form-group">
 
@@ -662,14 +629,13 @@ textarea.report-lost-form-control {
                             <span style="color: var(--muted); font-weight: 400;">
                                 (Optional)
                             </span>
-
                         </label>
 
                         <input
                             type="file"
                             name="image"
                             id="image"
-                            class="form-control report-lost-form-control report-lost-file"
+                            class="form-control report-lost-form-control report-lost-file @error('image') is-invalid @enderror"
                             accept=".jpg,.jpeg,.png,.webp"
                         >
 
@@ -679,12 +645,14 @@ textarea.report-lost-form-control {
 
                         @error('image')
                             <div class="report-lost-error">
+                                <i class="bi bi-exclamation-circle me-1"></i>
                                 {{ $message }}
                             </div>
                         @enderror
 
                     </div>
 
+                    {{-- Buttons --}}
 
                     <div class="report-lost-actions">
 
@@ -711,13 +679,9 @@ textarea.report-lost-form-control {
                 </form>
 
             </div>
-
         </div>
-
     </div>
-
 </div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -730,68 +694,42 @@ document.addEventListener('DOMContentLoaded', function () {
     const customLocationContainer = document.getElementById('custom-location-container');
     const customLocationInput = document.getElementById('custom_location');
 
-
     function toggleCustomCategory() {
-
         if (!categorySelect || !customCategoryContainer || !customCategoryInput) {
             return;
         }
 
         if (categorySelect.value === 'custom') {
-
             customCategoryContainer.style.display = 'block';
             customCategoryInput.required = true;
-
         } else {
-
             customCategoryContainer.style.display = 'none';
             customCategoryInput.required = false;
-
         }
     }
 
-
     function toggleCustomLocation() {
-
         if (!locationSelect || !customLocationContainer || !customLocationInput) {
             return;
         }
 
         if (locationSelect.value === 'custom') {
-
             customLocationContainer.style.display = 'block';
             customLocationInput.required = true;
-
         } else {
-
             customLocationContainer.style.display = 'none';
             customLocationInput.required = false;
-
         }
     }
 
-
     if (categorySelect) {
-
-        categorySelect.addEventListener(
-            'change',
-            toggleCustomCategory
-        );
-
+        categorySelect.addEventListener('change', toggleCustomCategory);
         toggleCustomCategory();
-
     }
 
-
     if (locationSelect) {
-
-        locationSelect.addEventListener(
-            'change',
-            toggleCustomLocation
-        );
-
+        locationSelect.addEventListener('change', toggleCustomLocation);
         toggleCustomLocation();
-
     }
 
 });

@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('title', 'Report Found Item')
@@ -5,7 +6,6 @@
 @section('content')
 
 <style>
-
 .report-found-page {
     --teal: #365c5a;
     --teal-dark: #294947;
@@ -148,9 +148,23 @@ textarea.report-found-form-control {
 }
 
 .report-found-error {
-    color: #bd5555;
-    font-size: 11px;
+    color: #dc3545;
+    font-size: 12px;
+    font-weight: 600;
     margin-top: 6px;
+}
+
+.report-found-form-control.is-invalid,
+.report-found-form-select.is-invalid {
+    border: 1px solid #dc3545 !important;
+    background-color: #fff8f8;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.10);
+}
+
+.report-found-form-control.is-invalid:focus,
+.report-found-form-select.is-invalid:focus {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
 }
 
 .report-found-actions {
@@ -208,7 +222,6 @@ textarea.report-found-form-control {
 }
 
 @media (max-width: 767px) {
-
     .report-found-title {
         font-size: 26px;
     }
@@ -233,16 +246,13 @@ textarea.report-found-form-control {
     .report-found-submit {
         width: 100%;
     }
-
 }
-
 </style>
-
 
 <div class="report-found-page">
 
+    {{-- Page Heading --}}
     <div class="report-found-heading">
-
         <div class="report-found-label">
             Lost & Found
         </div>
@@ -254,61 +264,43 @@ textarea.report-found-form-control {
         <p class="report-found-description">
             Provide the details of the item you found so the owner can be identified.
         </p>
-
     </div>
 
-
+    {{-- General Error Message --}}
     @if(session('error'))
-
         <div class="alert alert-danger report-found-alert">
             <i class="bi bi-exclamation-circle me-2"></i>
             {{ session('error') }}
         </div>
-
     @endif
 
+    {{-- Validation Errors --}}
+    @if($errors->any())
+        <div class="alert alert-danger report-found-alert">
+            <i class="bi bi-exclamation-circle me-2"></i>
+            Please correct the following errors:
 
+            <ul class="mb-0 mt-2">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    {{-- Success Message --}}
     @if(session('success'))
-
         <div class="alert alert-success report-found-alert">
             <i class="bi bi-check-circle me-2"></i>
             {{ session('success') }}
         </div>
-
     @endif
-
-
-    @if($errors->any())
-
-        <div class="alert alert-danger report-found-alert">
-
-            <i class="bi bi-exclamation-circle me-2"></i>
-
-            Please correct the following errors:
-
-            <ul class="mb-0 mt-2">
-
-                @foreach($errors->all() as $error)
-
-                    <li>
-                        {{ $error }}
-                    </li>
-
-                @endforeach
-
-            </ul>
-
-        </div>
-
-    @endif
-
 
     <div class="report-found-wrapper">
-
         <div class="report-found-card">
 
+            {{-- Card Header --}}
             <div class="report-found-card-header">
-
                 <div class="report-found-section">
 
                     <div class="report-found-section-icon">
@@ -316,7 +308,6 @@ textarea.report-found-form-control {
                     </div>
 
                     <div>
-
                         <div class="report-found-section-title">
                             Found Item Information
                         </div>
@@ -324,220 +315,193 @@ textarea.report-found-form-control {
                         <p class="report-found-section-text">
                             Fill in the details below to submit your found item report.
                         </p>
-
                     </div>
 
                 </div>
-
             </div>
 
-
+            {{-- Form --}}
             <div class="report-found-card-body">
 
                 <form
                     action="{{ auth()->user()->role === 'admin'
                         ? url('/admin/report-found')
-                        : url('/faculty/report-found') }}"
+                        : (auth()->user()->role === 'faculty'
+                            ? url('/faculty/report-found')
+                            : url('/student/report-found')) }}"
                     method="POST"
                     enctype="multipart/form-data"
                 >
 
                     @csrf
 
-
                     {{-- Item Name --}}
-
                     <div class="report-found-form-group">
-
-                        <label
-                            for="item_name"
-                            class="report-found-form-label"
-                        >
-                            Item Name
+                        <label for="item_name" class="report-found-form-label">
+                            Item Name <span style="color: #dc3545;">*</span>
                         </label>
 
                         <input
                             type="text"
                             name="item_name"
                             id="item_name"
-                            class="report-found-form-control"
+                            class="report-found-form-control @error('item_name') is-invalid @enderror"
                             placeholder="Example: Black Wallet"
                             value="{{ old('item_name') }}"
+                            maxlength="255"
                             required
                         >
 
                         @error('item_name')
-
                             <div class="report-found-error">
                                 {{ $message }}
                             </div>
-
                         @enderror
-
                     </div>
 
-
                     {{-- Category --}}
-
                     <div class="report-found-form-group">
-
-                        <label
-                            for="category_id"
-                            class="report-found-form-label"
-                        >
-                            Category
+                        <label for="category_id" class="report-found-form-label">
+                            Category <span style="color: #dc3545;">*</span>
                         </label>
 
                         <select
                             name="category_id"
                             id="category_id"
-                            class="report-found-form-select"
+                            class="report-found-form-select @error('category_id') is-invalid @enderror"
                             required
                         >
-
-                            <option value="">
-                                Select Category
-                            </option>
+                            <option value="">Select Category</option>
 
                             @foreach($categories as $category)
-
                                 <option
                                     value="{{ $category->id }}"
                                     {{ old('category_id') == $category->id ? 'selected' : '' }}
                                 >
                                     {{ $category->name }}
                                 </option>
-
                             @endforeach
-
                         </select>
 
                         @error('category_id')
-
                             <div class="report-found-error">
                                 {{ $message }}
                             </div>
-
                         @enderror
-
                     </div>
 
-
                     {{-- Location --}}
-
                     <div class="report-found-form-group">
-
-                        <label
-                            for="location_id"
-                            class="report-found-form-label"
-                        >
-                            Location
+                        <label for="location_id" class="report-found-form-label">
+                            Location <span style="color: #dc3545;">*</span>
                         </label>
 
                         <select
                             name="location_id"
                             id="location_id"
-                            class="report-found-form-select"
-                            required
+                            class="report-found-form-select @error('location_id') is-invalid @enderror"
                         >
-
-                            <option value="">
-                                Select Location
-                            </option>
+                            <option value="">Select Location</option>
 
                             @foreach($locations as $location)
-
                                 <option
                                     value="{{ $location->id }}"
                                     {{ old('location_id') == $location->id ? 'selected' : '' }}
                                 >
                                     {{ $location->name }}
                                 </option>
-
                             @endforeach
 
+                            <option
+                                value="custom"
+                                {{ old('location_id') == 'custom' || old('custom_location') ? 'selected' : '' }}
+                            >
+                                Other / Specify Location
+                            </option>
                         </select>
 
                         @error('location_id')
-
                             <div class="report-found-error">
                                 {{ $message }}
                             </div>
-
                         @enderror
-
                     </div>
 
+                    {{-- Custom Location --}}
+                    <div
+                        class="report-found-form-group"
+                        id="customLocationGroup"
+                        style="{{ old('location_id') == 'custom' || old('custom_location') ? '' : 'display: none;' }}"
+                    >
+                        <label for="custom_location" class="report-found-form-label">
+                            Specify Location <span style="color: #dc3545;">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="custom_location"
+                            id="custom_location"
+                            class="report-found-form-control @error('custom_location') is-invalid @enderror"
+                            placeholder="Enter where you found the item"
+                            value="{{ old('custom_location') }}"
+                            maxlength="255"
+                        >
+
+                        @error('custom_location')
+                            <div class="report-found-error">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
 
                     {{-- Date Found --}}
-
                     <div class="report-found-form-group">
-
-                        <label
-                            for="found_date"
-                            class="report-found-form-label"
-                        >
-                            Date Found
+                        <label for="found_date" class="report-found-form-label">
+                            Date Found <span style="color: #dc3545;">*</span>
                         </label>
 
                         <input
                             type="date"
                             name="found_date"
                             id="found_date"
-                            class="report-found-form-control"
+                            class="report-found-form-control @error('found_date') is-invalid @enderror"
                             value="{{ old('found_date') }}"
+                            max="{{ now()->format('Y-m-d') }}"
                             required
                         >
 
                         @error('found_date')
-
                             <div class="report-found-error">
+                                <i class="bi bi-exclamation-circle me-1"></i>
                                 {{ $message }}
                             </div>
-
                         @enderror
-
                     </div>
 
-
                     {{-- Description --}}
-
                     <div class="report-found-form-group">
-
-                        <label
-                            for="description"
-                            class="report-found-form-label"
-                        >
-                            Description
+                        <label for="description" class="report-found-form-label">
+                            Description <span style="color: #dc3545;">*</span>
                         </label>
 
                         <textarea
                             name="description"
                             id="description"
-                            class="report-found-form-control"
+                            class="report-found-form-control @error('description') is-invalid @enderror"
                             placeholder="Describe the item, including its color, brand, or other identifying details."
                             required
                         >{{ old('description') }}</textarea>
 
                         @error('description')
-
                             <div class="report-found-error">
                                 {{ $message }}
                             </div>
-
                         @enderror
-
                     </div>
 
-
-                    {{-- Image --}}
-
+                    {{-- Item Photo --}}
                     <div class="report-found-form-group">
-
-                        <label
-                            for="image"
-                            class="report-found-form-label"
-                        >
+                        <label for="image" class="report-found-form-label">
                             Item Photo
                         </label>
 
@@ -545,7 +509,7 @@ textarea.report-found-form-control {
                             type="file"
                             name="image"
                             id="image"
-                            class="form-control report-found-form-control report-found-file"
+                            class="form-control report-found-form-control report-found-file @error('image') is-invalid @enderror"
                             accept=".jpg,.jpeg,.png,.webp"
                         >
 
@@ -554,24 +518,21 @@ textarea.report-found-form-control {
                         </div>
 
                         @error('image')
-
                             <div class="report-found-error">
                                 {{ $message }}
                             </div>
-
                         @enderror
-
                     </div>
 
-
                     {{-- Buttons --}}
-
                     <div class="report-found-actions">
 
                         <a
                             href="{{ auth()->user()->role === 'admin'
                                 ? url('/admin/dashboard')
-                                : url('/faculty/dashboard') }}"
+                                : (auth()->user()->role === 'faculty'
+                                    ? url('/faculty/dashboard')
+                                    : url('/student/dashboard')) }}"
                             class="report-found-cancel"
                         >
                             Cancel
@@ -590,11 +551,32 @@ textarea.report-found-form-control {
                 </form>
 
             </div>
-
         </div>
-
     </div>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const locationSelect = document.getElementById('location_id');
+    const customLocationGroup = document.getElementById('customLocationGroup');
+    const customLocationInput = document.getElementById('custom_location');
+
+    function toggleCustomLocation() {
+        const isCustom = locationSelect.value === 'custom';
+
+        customLocationGroup.style.display = isCustom ? 'block' : 'none';
+        customLocationInput.required = isCustom;
+
+        if (!isCustom) {
+            customLocationInput.value = '';
+        }
+    }
+
+    locationSelect.addEventListener('change', toggleCustomLocation);
+
+    toggleCustomLocation();
+});
+</script>
 
 @endsection

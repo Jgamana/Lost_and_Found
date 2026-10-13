@@ -20,6 +20,7 @@ class FoundItem extends Model
         'image',
         'found_date',
         'status',
+         'custom_location', 
     ];
 
     public function user()

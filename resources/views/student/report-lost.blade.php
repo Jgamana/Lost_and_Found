@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('title', 'Report Lost Item')
@@ -5,7 +6,6 @@
 @section('content')
 
 <style>
-
 .student-report-lost-page {
     --lost-teal: #365c5a;
     --lost-teal-dark: #294947;
@@ -16,6 +16,7 @@
     --lost-light: #eef5f3;
 }
 
+/* PAGE HEADER */
 .student-report-lost-page .page-heading {
     margin-bottom: 24px;
 }
@@ -42,6 +43,7 @@
     margin-bottom: 0;
 }
 
+/* FORM CARD */
 .student-report-lost-card {
     background: #ffffff;
     border: 1px solid var(--lost-border);
@@ -85,6 +87,7 @@
     margin: 0;
 }
 
+/* FORM */
 .student-report-lost-form {
     width: 100%;
 }
@@ -131,12 +134,30 @@
     margin-top: 6px;
 }
 
+/* RED VALIDATION STYLING */
 .student-report-lost-error {
-    color: #bd5555;
-    font-size: 10px;
-    margin-top: 5px;
+    display: block;
+    color: #dc3545;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-top: 6px;
 }
 
+.student-report-lost-form .form-control.is-invalid,
+.student-report-lost-form .form-select.is-invalid {
+    border-color: #dc3545;
+    background-color: #fff8f8;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.10);
+}
+
+.student-report-lost-form .form-control.is-invalid:focus,
+.student-report-lost-form .form-select.is-invalid:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
+}
+
+/* CUSTOM FIELDS */
 .lost-form-section {
     margin-bottom: 24px;
 }
@@ -168,6 +189,7 @@
     border-radius: 10px;
 }
 
+/* COMPENSATION */
 .student-report-lost-compensation {
     padding: 14px;
     background: #fbfcfc;
@@ -189,6 +211,7 @@
     border-radius: 0 10px 10px 0;
 }
 
+/* ACTIONS */
 .student-report-lost-actions {
     display: flex;
     justify-content: flex-end;
@@ -236,8 +259,8 @@
     color: #ffffff;
 }
 
+/* RESPONSIVE */
 @media (max-width: 767px) {
-
     .student-report-lost-page .page-heading h1 {
         font-size: 26px;
     }
@@ -254,43 +277,36 @@
     .student-report-lost-submit {
         width: 100%;
     }
-
 }
-
 </style>
 
 <div class="student-report-lost-page">
 
+    {{-- PAGE HEADER --}}
     <div class="page-heading">
-
         <div class="page-label">
             Lost & Found
         </div>
 
-        <h1>
-            Report Lost Item
-        </h1>
+        <h1>Report Lost Item</h1>
 
         <p>
             Provide the details of the item you lost so it can be easier to find.
         </p>
-
     </div>
 
     <div class="row justify-content-center">
-
         <div class="col-12 col-xl-9">
 
             <div class="student-report-lost-card">
 
+                {{-- CARD HEADER --}}
                 <div class="student-report-lost-header">
-
                     <div class="student-report-lost-header-icon">
                         <i class="bi bi-search"></i>
                     </div>
 
                     <div>
-
                         <h5 class="student-report-lost-title">
                             Lost Item Information
                         </h5>
@@ -298,20 +314,19 @@
                         <p class="student-report-lost-subtitle">
                             Fill in the details below.
                         </p>
-
                     </div>
-
                 </div>
 
+                {{-- FORM --}}
                 <form
                     action="{{ url('/student/report-lost') }}"
                     method="POST"
                     enctype="multipart/form-data"
                     class="student-report-lost-form"
                 >
-
                     @csrf
 
+                    {{-- ITEM INFORMATION --}}
                     <div class="lost-form-section">
 
                         <div class="lost-form-section-title">
@@ -319,57 +334,51 @@
                             Item Information
                         </div>
 
+                        {{-- ITEM NAME --}}
                         <div class="mb-3">
-
-                            <label class="form-label">
+                            <label for="item_name" class="form-label">
                                 Item Name
                             </label>
 
                             <input
                                 type="text"
                                 name="item_name"
-                                class="form-control"
+                                id="item_name"
+                                class="form-control @error('item_name') is-invalid @enderror"
                                 placeholder="Example: Black Wallet"
                                 value="{{ old('item_name') }}"
                                 required
                             >
 
                             @error('item_name')
-
                                 <div class="student-report-lost-error">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
                                     {{ $message }}
                                 </div>
-
                             @enderror
-
                         </div>
 
+                        {{-- CATEGORY --}}
                         <div class="mb-3">
-
-                            <label class="form-label">
+                            <label for="category_id" class="form-label">
                                 Category
                             </label>
 
                             <select
                                 name="category_id"
                                 id="category_id"
-                                class="form-select"
+                                class="form-select @error('category_id') is-invalid @enderror"
                                 required
                             >
-
-                                <option value="">
-                                    Select Category
-                                </option>
+                                <option value="">Select Category</option>
 
                                 @foreach($categories as $category)
-
                                     <option
                                         value="{{ $category->id }}"
                                         {{ old('category_id') == $category->id ? 'selected' : '' }}
                                     >
                                         {{ $category->name }}
                                     </option>
-
                                 @endforeach
 
                                 <option
@@ -378,26 +387,23 @@
                                 >
                                     Other / Custom Category
                                 </option>
-
                             </select>
 
                             @error('category_id')
-
                                 <div class="student-report-lost-error">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
                                     {{ $message }}
                                 </div>
-
                             @enderror
-
                         </div>
 
+                        {{-- CUSTOM CATEGORY --}}
                         <div
                             class="lost-custom-field"
                             id="custom-category-group"
-                            style="display: none;"
+                            style="{{ old('category_id') == 'custom' ? 'display: block;' : 'display: none;' }}"
                         >
-
-                            <label class="form-label">
+                            <label for="custom_category" class="form-label">
                                 Custom Category
                             </label>
 
@@ -405,23 +411,22 @@
                                 type="text"
                                 name="custom_category"
                                 id="custom_category"
-                                class="form-control"
+                                class="form-control @error('custom_category') is-invalid @enderror"
                                 placeholder="Enter your category"
                                 value="{{ old('custom_category') }}"
                             >
 
                             @error('custom_category')
-
                                 <div class="student-report-lost-error">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
                                     {{ $message }}
                                 </div>
-
                             @enderror
-
                         </div>
 
                     </div>
 
+                    {{-- LOCATION AND DATE --}}
                     <div class="lost-form-section">
 
                         <div class="lost-form-section-title">
@@ -429,32 +434,27 @@
                             Location & Date
                         </div>
 
+                        {{-- LOCATION --}}
                         <div class="mb-3">
-
-                            <label class="form-label">
+                            <label for="location_id" class="form-label">
                                 Location
                             </label>
 
                             <select
                                 name="location_id"
                                 id="location_id"
-                                class="form-select"
+                                class="form-select @error('location_id') is-invalid @enderror"
                                 required
                             >
-
-                                <option value="">
-                                    Select Location
-                                </option>
+                                <option value="">Select Location</option>
 
                                 @foreach($locations as $location)
-
                                     <option
                                         value="{{ $location->id }}"
                                         {{ old('location_id') == $location->id ? 'selected' : '' }}
                                     >
                                         {{ $location->name }}
                                     </option>
-
                                 @endforeach
 
                                 <option
@@ -463,26 +463,23 @@
                                 >
                                     Other / Custom Location
                                 </option>
-
                             </select>
 
                             @error('location_id')
-
                                 <div class="student-report-lost-error">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
                                     {{ $message }}
                                 </div>
-
                             @enderror
-
                         </div>
 
+                        {{-- CUSTOM LOCATION --}}
                         <div
                             class="lost-custom-field"
                             id="custom-location-group"
-                            style="display: none;"
+                            style="{{ old('location_id') == 'custom' ? 'display: block;' : 'display: none;' }}"
                         >
-
-                            <label class="form-label">
+                            <label for="custom_location" class="form-label">
                                 Specific Location
                             </label>
 
@@ -490,47 +487,46 @@
                                 type="text"
                                 name="custom_location"
                                 id="custom_location"
-                                class="form-control"
+                                class="form-control @error('custom_location') is-invalid @enderror"
                                 placeholder="Example: 2nd Floor, Room 204"
                                 value="{{ old('custom_location') }}"
                             >
 
                             @error('custom_location')
-
                                 <div class="student-report-lost-error">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
                                     {{ $message }}
                                 </div>
-
                             @enderror
-
                         </div>
 
+                        {{-- DATE LOST --}}
                         <div class="mb-3">
-
-                            <label class="form-label">
+                            <label for="lost_date" class="form-label">
                                 Date Lost
                             </label>
 
                             <input
                                 type="date"
                                 name="lost_date"
-                                class="form-control"
+                                id="lost_date"
+                                class="form-control @error('lost_date') is-invalid @enderror"
                                 value="{{ old('lost_date') }}"
+                                max="{{ now()->format('Y-m-d') }}"
                                 required
                             >
 
                             @error('lost_date')
-
                                 <div class="student-report-lost-error">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
                                     {{ $message }}
                                 </div>
-
                             @enderror
-
                         </div>
 
                     </div>
 
+                    {{-- ADDITIONAL INFORMATION --}}
                     <div class="lost-form-section">
 
                         <div class="lost-form-section-title">
@@ -538,33 +534,32 @@
                             Additional Information
                         </div>
 
+                        {{-- DESCRIPTION --}}
                         <div class="mb-3">
-
-                            <label class="form-label">
+                            <label for="description" class="form-label">
                                 Description
                             </label>
 
                             <textarea
                                 name="description"
-                                class="form-control"
+                                id="description"
+                                class="form-control @error('description') is-invalid @enderror"
                                 rows="5"
                                 placeholder="Describe the item, including its color, brand, or other identifying details."
                                 required
                             >{{ old('description') }}</textarea>
 
                             @error('description')
-
                                 <div class="student-report-lost-error">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
                                     {{ $message }}
                                 </div>
-
                             @enderror
-
                         </div>
 
+                        {{-- COMPENSATION OFFER --}}
                         <div class="student-report-lost-compensation mb-3">
-
-                            <label class="form-label">
+                            <label for="compensation_offer" class="form-label">
                                 Maximum Compensation Willing to Give
                                 <span style="color: var(--lost-muted); font-weight: 400;">
                                     (Optional)
@@ -572,21 +567,18 @@
                             </label>
 
                             <div class="input-group">
-
-                                <span class="input-group-text">
-                                    ₱
-                                </span>
+                                <span class="input-group-text">₱</span>
 
                                 <input
                                     type="number"
                                     name="compensation_offer"
-                                    class="form-control"
+                                    id="compensation_offer"
+                                    class="form-control @error('compensation_offer') is-invalid @enderror"
                                     value="{{ old('compensation_offer') }}"
                                     min="0"
                                     step="0.01"
                                     placeholder="Example: 100.00"
                                 >
-
                             </div>
 
                             <div class="form-text">
@@ -594,25 +586,24 @@
                             </div>
 
                             @error('compensation_offer')
-
                                 <div class="student-report-lost-error">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
                                     {{ $message }}
                                 </div>
-
                             @enderror
-
                         </div>
 
+                        {{-- ITEM PHOTO --}}
                         <div class="mb-3">
-
-                            <label class="form-label">
+                            <label for="image" class="form-label">
                                 Item Photo
                             </label>
 
                             <input
                                 type="file"
                                 name="image"
-                                class="form-control"
+                                id="image"
+                                class="form-control @error('image') is-invalid @enderror"
                                 accept=".jpg,.jpeg,.png,.webp"
                             >
 
@@ -622,19 +613,17 @@
                             </div>
 
                             @error('image')
-
                                 <div class="student-report-lost-error">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
                                     {{ $message }}
                                 </div>
-
                             @enderror
-
                         </div>
 
                     </div>
 
+                    {{-- ACTIONS --}}
                     <div class="student-report-lost-actions">
-
                         <a
                             href="{{ url('/student/dashboard') }}"
                             class="student-report-lost-cancel"
@@ -646,101 +635,67 @@
                             type="submit"
                             class="student-report-lost-submit"
                         >
-
                             <i class="bi bi-send"></i>
-
                             Submit Report
-
                         </button>
-
                     </div>
 
                 </form>
 
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function () {
 
-    const categorySelect =
-        document.getElementById('category_id');
-
-    const customCategoryGroup =
-        document.getElementById('custom-category-group');
+    const categorySelect = document.getElementById('category_id');
+    const customCategoryGroup = document.getElementById('custom-category-group');
+    const customCategoryInput = document.getElementById('custom_category');
 
     function toggleCustomCategory() {
-
         if (!categorySelect || !customCategoryGroup) {
             return;
         }
 
-        if (categorySelect.value === 'custom') {
+        const isCustom = categorySelect.value === 'custom';
 
-            customCategoryGroup.style.display = 'block';
+        customCategoryGroup.style.display = isCustom ? 'block' : 'none';
 
-        } else {
-
-            customCategoryGroup.style.display = 'none';
-
+        if (customCategoryInput) {
+            customCategoryInput.required = isCustom;
         }
-
     }
 
     if (categorySelect) {
-
-        categorySelect.addEventListener(
-            'change',
-            toggleCustomCategory
-        );
-
+        categorySelect.addEventListener('change', toggleCustomCategory);
         toggleCustomCategory();
-
     }
 
-    const locationSelect =
-        document.getElementById('location_id');
-
-    const customLocationGroup =
-        document.getElementById('custom-location-group');
+    const locationSelect = document.getElementById('location_id');
+    const customLocationGroup = document.getElementById('custom-location-group');
+    const customLocationInput = document.getElementById('custom_location');
 
     function toggleCustomLocation() {
-
         if (!locationSelect || !customLocationGroup) {
             return;
         }
 
-        if (locationSelect.value === 'custom') {
+        const isCustom = locationSelect.value === 'custom';
 
-            customLocationGroup.style.display = 'block';
+        customLocationGroup.style.display = isCustom ? 'block' : 'none';
 
-        } else {
-
-            customLocationGroup.style.display = 'none';
-
+        if (customLocationInput) {
+            customLocationInput.required = isCustom;
         }
-
     }
 
     if (locationSelect) {
-
-        locationSelect.addEventListener(
-            'change',
-            toggleCustomLocation
-        );
-
+        locationSelect.addEventListener('change', toggleCustomLocation);
         toggleCustomLocation();
-
     }
-
 });
-
 </script>
 
 @endsection

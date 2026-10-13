@@ -40,18 +40,49 @@ class FoundItemController extends Controller
             ], 404);
         }
 
-        $foundItem->update([
-            'user_id' => $request->user_id,
-            'category_id' => $request->category_id,
-            'location_id' => $request->location_id,
-            'received_by' => $request->received_by,
-            'item_name' => $request->item_name,
-            'description' => $request->description,
-            'found_date' => $request->found_date,
-            'status' => $request->status,
+        // Support custom locations in the API.
+        if ($request->input('location_id') === 'custom') {
+            $request->merge([
+                'location_id' => null,
+            ]);
+        }
+
+        $validated = $request->validate([
+            'user_id' => 'sometimes|required|exists:users,id',
+            'category_id' => 'sometimes|required|exists:categories,id',
+            'location_id' => 'sometimes|nullable|required_without:custom_location|exists:locations,id',
+            'custom_location' => 'sometimes|nullable|required_without:location_id|string|max:255',
+            'received_by' => 'sometimes|nullable|exists:users,id',
+            'item_name' => 'sometimes|required|string',
+            'description' => 'sometimes|required|string',
+            'found_date' => 'sometimes|required|date|before_or_equal:today',
+            'status' => 'sometimes|required|string',
         ]);
 
-        return response()->json($foundItem);
+        if (array_key_exists('location_id', $validated)) {
+            $validated['custom_location'] = !empty($validated['custom_location'])
+                ? trim($validated['custom_location'])
+                : null;
+        } elseif (array_key_exists('custom_location', $validated)) {
+            $validated['custom_location'] = !empty($validated['custom_location'])
+                ? trim($validated['custom_location'])
+                : null;
+
+            if ($validated['custom_location'] !== null) {
+                $validated['location_id'] = null;
+            }
+        }
+
+        $foundItem->update($validated);
+
+        return response()->json(
+            $foundItem->load([
+                'user',
+                'category',
+                'location',
+                'receiver'
+            ])
+        );
     }
 
     public function destroy(string $id)
@@ -62,6 +93,10 @@ class FoundItemController extends Controller
             return response()->json([
                 'message' => 'Found item not found'
             ], 404);
+        }
+
+        if ($foundItem->image) {
+            Storage::disk('public')->delete($foundItem->image);
         }
 
         $foundItem->delete();
@@ -79,19 +114,27 @@ class FoundItemController extends Controller
 
     public function store(Request $request)
     {
+        // Convert the custom dropdown option into a nullable location ID.
+        if ($request->input('location_id') === 'custom') {
+            $request->merge([
+                'location_id' => null,
+            ]);
+        }
+
         $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'location_id' => 'required|exists:locations,id',
-            'item_name' => 'required|string',
+            'location_id' => 'nullable|required_without:custom_location|exists:locations,id',
+            'custom_location' => 'nullable|required_without:location_id|string|max:255',
+            'item_name' => 'required|string|max:255',
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
-            'found_date' => 'required|date',
+            'found_date' => 'required|date|before_or_equal:today',
         ]);
 
         $suggestedCompensation = null;
 
+        // Only students must suggest compensation when reporting found items.
         if (auth()->user()->role === 'student') {
-
             $compensationRule = CompensationRule::where(
                 'category_id',
                 $request->category_id
@@ -150,10 +193,17 @@ class FoundItemController extends Controller
         |--------------------------------------------------------------------------
         */
 
+        $customLocation = $request->filled('custom_location')
+            ? trim($request->input('custom_location'))
+            : null;
+
         $foundItem = FoundItem::create([
             'user_id' => auth()->id(),
             'category_id' => $request->category_id,
-            'location_id' => $request->location_id,
+            'location_id' => $customLocation
+                ? null
+                : $request->location_id,
+            'custom_location' => $customLocation,
             'received_by' => null,
             'item_name' => $request->item_name,
             'description' => $request->description,
@@ -186,14 +236,14 @@ class FoundItemController extends Controller
             return redirect('/faculty/report-found')
                 ->with(
                     'success',
-                    'Found item reported successfully. Please surrender the item to Faculty or Admin for verification.'
+                    'Found item reported successfully. Please surrender the item in the SAS Office.'
                 );
         }
 
         return redirect('/student/report-found')
             ->with(
                 'success',
-                'Found item reported successfully. Please surrender the item to Faculty or Admin for verification.'
+                'Found item reported successfully. Please surrender the item in the SAS Office.'
             );
     }
 
@@ -279,22 +329,27 @@ class FoundItemController extends Controller
             auth()->id()
         )->findOrFail($id);
 
+        if ($request->input('location_id') === 'custom') {
+            $request->merge([
+                'location_id' => null,
+            ]);
+        }
+
         $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'location_id' => 'required|exists:locations,id',
-            'item_name' => 'required|string',
+            'location_id' => 'nullable|required_without:custom_location|exists:locations,id',
+            'custom_location' => 'nullable|required_without:location_id|string|max:255',
+            'item_name' => 'required|string|max:255',
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
-            'found_date' => 'required|date',
+            'found_date' => 'required|date|before_or_equal:today',
         ]);
 
         $imagePath = $foundItem->image;
 
         if ($request->hasFile('image')) {
-
             if ($foundItem->image) {
-                Storage::disk('public')
-                    ->delete($foundItem->image);
+                Storage::disk('public')->delete($foundItem->image);
             }
 
             $imagePath = $request
@@ -302,9 +357,16 @@ class FoundItemController extends Controller
                 ->store('found-items', 'public');
         }
 
+        $customLocation = $request->filled('custom_location')
+            ? trim($request->input('custom_location'))
+            : null;
+
         $foundItem->update([
             'category_id' => $request->category_id,
-            'location_id' => $request->location_id,
+            'location_id' => $customLocation
+                ? null
+                : $request->location_id,
+            'custom_location' => $customLocation,
             'item_name' => $request->item_name,
             'description' => $request->description,
             'image' => $imagePath,
@@ -344,43 +406,37 @@ class FoundItemController extends Controller
             ->where('user_id', '!=', auth()->id())
             ->where('status', 'approved')
             ->when($query, function ($q) use ($query) {
-
                 $q->where(function ($search) use ($query) {
-
                     $search->where(
                         'item_name',
                         'like',
                         "%{$query}%"
                     )
-
                     ->orWhere(
                         'description',
                         'like',
                         "%{$query}%"
                     )
-
                     ->orWhereHas('category', function ($category) use ($query) {
-
                         $category->where(
                             'name',
                             'like',
                             "%{$query}%"
                         );
-
                     })
-
                     ->orWhereHas('location', function ($location) use ($query) {
-
                         $location->where(
                             'name',
                             'like',
                             "%{$query}%"
                         );
-
-                    });
-
+                    })
+                    ->orWhere(
+                        'custom_location',
+                        'like',
+                        "%{$query}%"
+                    );
                 });
-
             })
             ->latest()
             ->get();
@@ -608,8 +664,7 @@ class FoundItemController extends Controller
         $foundItem = FoundItem::findOrFail($id);
 
         if ($foundItem->image) {
-            Storage::disk('public')
-                ->delete($foundItem->image);
+            Storage::disk('public')->delete($foundItem->image);
         }
 
         ActivityLog::record(

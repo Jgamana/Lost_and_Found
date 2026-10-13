@@ -67,7 +67,7 @@ class LostItemController extends Controller
             'description' => 'required|string',
             'compensation_offer' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
-            'lost_date' => 'required|date',
+            'lost_date' => 'required|date|before_or_equal:today',
             'status' => 'nullable|string',
         ]);
 
@@ -262,7 +262,7 @@ class LostItemController extends Controller
             'description' => 'required|string',
             'compensation_offer' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
-            'lost_date' => 'required|date',
+            'lost_date' => 'required|date|before_or_equal:today',
         ]);
 
         if ($request->category_id === 'custom') {

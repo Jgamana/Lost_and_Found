@@ -376,15 +376,24 @@
     color: var(--admin-text);
 }
 
+
 .admin-button-schedule {
-    background: var(--admin-teal);
-    color: white;
+    background-color: #365c5a !important;
+    color: #ffffff !important;
+    border: 1px solid #365c5a !important;
+    opacity: 1 !important;
 }
 
 .admin-button-schedule:hover {
-    background: var(--admin-teal-dark);
-    color: white;
+    background-color: #294947 !important;
+    color: #ffffff !important;
+    border-color: #294947 !important;
 }
+
+.admin-button-schedule i {
+    color: #ffffff !important;
+}
+
 
 .admin-button-approve {
     background: #43835a;
@@ -423,73 +432,143 @@
 |--------------------------------------------------------------------------
 */
 
+
+/* Schedule Release Modal */
 .admin-schedule-modal {
-    border: 1px solid var(--admin-border);
-    border-radius: 20px;
+    border: none;
+    border-radius: 22px;
     overflow: hidden;
+    box-shadow: 0 20px 60px rgba(24, 48, 46, 0.20);
+    background: #ffffff;
 }
 
+/* Modal Header */
 .admin-schedule-header {
-    background: var(--admin-teal);
-    color: white;
-    border-bottom: 0;
-    padding: 18px 20px;
+    background: linear-gradient(135deg, #365c5a, #294947);
+    color: #ffffff;
+    border-bottom: none;
+    padding: 25px 28px;
 }
 
 .admin-schedule-header h5 {
-    font-size: 15px;
+    font-size: 19px;
     font-weight: 700;
-    margin-bottom: 3px;
+    margin-bottom: 6px;
 }
 
 .admin-schedule-header small {
-    color: rgba(255,255,255,0.68);
-    font-size: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
 }
 
 .admin-schedule-header .btn-close {
     filter: brightness(0) invert(1);
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
+/* Modal Body */
 .admin-schedule-body {
-    padding: 22px;
+    padding: 28px;
+    background: #ffffff;
 }
 
 .admin-form-group {
-    margin-bottom: 17px;
+    margin-bottom: 22px;
 }
 
 .admin-form-label {
     display: block;
-    color: var(--admin-text);
-    font-size: 11px;
+    color: #294947;
+    font-size: 12px;
     font-weight: 700;
-    margin-bottom: 7px;
+    margin-bottom: 9px;
 }
 
 .admin-form-control {
+    display: block;
     width: 100%;
-    border: 1px solid var(--admin-border);
-    border-radius: 10px;
-    padding: 10px 12px;
-    color: var(--admin-text);
-    font-size: 12px;
-    background: white;
+    min-height: 48px;
+    border: 1px solid #dce7e5;
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: #263b3a;
+    font-size: 13px;
+    background-color: #f9fbfa;
     outline: none;
-    transition: 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .admin-form-control:focus {
-    border-color: var(--admin-teal);
-    box-shadow: 0 0 0 3px rgba(54,92,90,0.08);
+    background-color: #ffffff;
+    border-color: #365c5a;
+    box-shadow: 0 0 0 4px rgba(54, 92, 90, 0.10);
 }
 
+/* Modal Footer */
 .admin-schedule-footer {
-    border-top: 1px solid var(--admin-border);
-    padding: 15px 20px;
-    background: #fafcfb;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 28px 24px;
+    background: #ffffff;
+    border-top: none;
 }
+
+.admin-schedule-footer .admin-action-button {
+    min-height: 44px;
+    padding: 11px 20px;
+    border-radius: 11px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.admin-schedule-footer .admin-button-back {
+    background: #f1f5f4;
+    color: #526563;
+    border: 1px solid #e0e9e7;
+}
+
+.admin-schedule-footer .admin-button-back:hover {
+    background: #e6eeec;
+    color: #294947;
+}
+
+.admin-schedule-footer .admin-button-schedule {
+    background: #365c5a !important;
+    color: #ffffff !important;
+    border: 1px solid #365c5a !important;
+    opacity: 1 !important;
+}
+
+.admin-schedule-footer .admin-button-schedule:hover {
+    background: #294947 !important;
+    color: #ffffff !important;
+}
+
+.admin-schedule-footer .admin-button-schedule i {
+    color: #ffffff !important;
+}
+
+@media (max-width: 576px) {
+    .admin-schedule-header {
+        padding: 20px;
+    }
+
+    .admin-schedule-body {
+        padding: 22px 20px;
+    }
+
+    .admin-schedule-footer {
+        padding: 15px 20px 20px;
+        flex-direction: column-reverse;
+    }
+
+    .admin-schedule-footer .admin-action-button {
+        width: 100%;
+    }
+}
+
 
 
 /*
