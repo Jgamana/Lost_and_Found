@@ -236,7 +236,7 @@ class UserController extends Controller
 
         ActivityLog::record(
             'Update Profile',
-            'Updated profile information for ' .
+            'Updated profile information for ' . 
             $user->name .
             '.'
         );

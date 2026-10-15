@@ -23,6 +23,8 @@ class RegisterController extends Controller
             'email' => 'required|email|unique:users,email',
             'role' => 'required|in:student,faculty',
             'password' => 'required|min:8|confirmed',
+        ], [
+            'email.unique' => 'This email is already registered. Please use another email address.',
         ]);
 
         $code = (string) random_int(100000, 999999);
